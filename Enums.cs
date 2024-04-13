@@ -13,4 +13,16 @@ namespace QuantumSerpent
         Down,
         Left
     }
+    public enum Difficulty
+    {
+        Easy,
+        Medium,
+        Hard
+    }
+    public enum GameState
+    {
+        Running,
+        Paused,
+        GameOver
+    }
 }
