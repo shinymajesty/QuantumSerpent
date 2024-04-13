@@ -4,7 +4,7 @@ namespace QuantumSerpent
     {
         Directions playerDirection = Directions.Right;
         readonly static Player player = new(50, 50, 10);
-        
+
         public FrmGame()
         {
             InitializeComponent();
@@ -18,7 +18,7 @@ namespace QuantumSerpent
             canvas.Invalidate(); // Force redraw
         }
 
-       
+
 
         private void BtnStart_Click(object sender, EventArgs e)
         {
@@ -59,5 +59,6 @@ namespace QuantumSerpent
 
             playerDirection = newDirection;
         }
+
     }
 }
