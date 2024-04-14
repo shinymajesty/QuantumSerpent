@@ -3,8 +3,9 @@ namespace QuantumSerpent
     public partial class FrmGame : Form
     {
         Directions playerDirection = Directions.Right;
-        readonly static Player player = new(40, 40, 10);
-        readonly Label lblPlayer1Name = new();
+        readonly static Player player1 = new(40, 40, 10);
+        readonly static Player player2 = new(460, 460, 10);
+        readonly static List<Player> playerList = [];
         EventHandlers eventHandlers = new();
         GameState gameState = GameState.Paused;
         bool hasMoved = false;
@@ -16,44 +17,60 @@ namespace QuantumSerpent
         private void GameTimer_Tick(object sender, EventArgs e)
         {
             // Game loop
-            player.Move(playerDirection);
+            player1.Move(playerDirection);
             ValidatePlayerPosition();
             canvas.Invalidate(); // Force redraw
             hasMoved = false;
         }
         private void ValidatePlayerPosition()
         {
-            if (player.X < 0 || player.X >= canvas.Width || player.Y < 0 || player.Y >= canvas.Height)
+            if (player1.X < 0 || player1.X >= canvas.Width || player1.Y < 0 || player1.Y >= canvas.Height)
             {
                 eventHandlers.TriggerGameOver();
             }
-            foreach (Position pos in player.Items.Skip(1))
+            foreach (Position pos in player1.Items.Skip(1))
             {
-                if (pos.X == player.X && pos.Y == player.Y)
+                if (pos.X == player1.X && pos.Y == player1.Y)
                 {
                     eventHandlers.TriggerGameOver();
+                    player1.State = PlayerState.Dead;
                 }
             }
         }
         private void SetupPlayerNames()
         {
-            lblPlayer1Name.Text = GameSettings.Player1_Name;
-            lblPlayer1Name.Width = 0;
-            lblPlayer1Name.Height = 0;
-            lblPlayer1Name.AutoSize = true;
-            lblPlayer1Name.ForeColor = Color.White;
-            lblPlayer1Name.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-            lblPlayer1Name.TextAlign = ContentAlignment.MiddleLeft;
-            lblPlayer1Name.BackColor = Color.Transparent;
-            lblPlayer1Name.BringToFront();
-            canvas.Controls.Add(lblPlayer1Name);
+            foreach (Player player in playerList)
+            {
+                Label lblPlayerName = new() {
+                Text = player.Name,
+                Width = 0,
+                Height = 0,
+                AutoSize = true,
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                BackColor = Color.Transparent
+                };
+                lblPlayerName.TextAlign = ContentAlignment.MiddleLeft;
+                canvas.Controls.Add(lblPlayerName);
+                lblPlayerName.BringToFront();
+            }
         }
         private void BtnStart_Click(object sender, EventArgs e)
         {
-            GameSettings.Player1_Name = txtName1.Text;
-            GameSettings.Player2_Name = txtName2.Text;
+            string player1_Name = txtName1.Text;
+            string player2_Name = txtName2.Text;
             GameSettings.Bot1 = chkBot1.Checked;
             GameSettings.Bot2 = chkBot2.Checked;
+
+            if (player1_Name != "")
+            {
+                playerList.Add(new Player(40,40,3) { Name = player1_Name});
+            }
+            if (player1_Name != "")
+            {
+                playerList.Add(new Player(460, 460, 3) { Name = player2_Name});
+            }
+
 
             txtName1.Enabled = false;
             txtName2.Enabled = false;
@@ -62,7 +79,6 @@ namespace QuantumSerpent
             btnDifficulty.Enabled = false;
 
             SetupPlayerNames();
-            
 
             gameTimer.Interval = GameSettings.Difficulty switch
             {
@@ -83,20 +99,30 @@ namespace QuantumSerpent
             // Draw the player
             if (gameState == GameState.Running)
             {
-                foreach (Position item in player.Items)
+                foreach(Player player in playerList)
                 {
-                    Brush brush;
-                    if (player.Items.First() == item)
+                    if (player.State == PlayerState.Alive)
                     {
-                        brush = Brushes.Red;
+                        foreach (Position item in player.Items)
+                        {
+                            Brush brush;
+                            if (player.Items.First() == item)
+                            {
+                                brush = Brushes.Red;
+                            }
+                            else
+                            {
+                                brush = Brushes.Black;
+                            }
+                            graphics.FillRectangle(brush, item.X, item.Y, 20, 20);
+                            if (canvas.Controls.Find("lblPlayer1Name", true).FirstOrDefault() is Label lblName)
+                            {
+                                lblName.Location = new Point((player.X - lblName.Width / 2 + 10), player.Y - 20);
+                            }
+                        }
                     }
-                    else
-                    {
-                        brush = Brushes.Black;
-                    }
-                    graphics.FillRectangle(brush, item.X, item.Y, 20, 20);
-                    lblPlayer1Name.Location = new Point((player.X - lblPlayer1Name.Width / 2 + 10), player.Y - 20);
                 }
+
             }
             
             
@@ -175,7 +201,7 @@ namespace QuantumSerpent
             canvas.Controls.Add(lblScore);
 
             Label lblScoreValues = new();
-            lblScoreValues.Text = $"Player 1: {player.Score} - Player 2: {player.Score}";
+            lblScoreValues.Text = $"Player 1: {player1.Score} - Player 2: {player1.Score}";
             lblScoreValues.AutoSize = true;
             lblScoreValues.Font = new Font("Segoe UI", 24, FontStyle.Bold);
             lblScoreValues.ForeColor = Color.Red;
@@ -184,6 +210,8 @@ namespace QuantumSerpent
             lblGameOver.Anchor = AnchorStyles.Top;
             lblScoreValues.Location = new Point(canvas.Width/2 - lblScoreValues.Width * 2, lblScore.Height + 10 + lblGameOver.Height + lblScore.Height);
             canvas.Controls.Add(lblScoreValues);
+
+            canvas.BackgroundImage = null;
         }
     }
 }

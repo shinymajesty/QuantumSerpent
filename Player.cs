@@ -23,6 +23,8 @@ namespace QuantumSerpent
             }
         }
 
+        
+
         public void Move(Directions direction)
         {
             const int OFFSET = 20;
@@ -49,9 +51,11 @@ namespace QuantumSerpent
         public int Score => items.Count;
 
         public int X => items[0].X;
-
+        public string Name { get; set; }
         public int Y => items[0].Y;
 
         public IEnumerable<Position> Items => items;
+        public PlayerState State { get; set; } = PlayerState.Alive;
+
     }
 }

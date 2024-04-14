@@ -64,6 +64,7 @@
             // canvas
             // 
             canvas.BackColor = Color.FromArgb(15, 15, 15);
+            canvas.BackgroundImage = Properties.Resources.tiles;
             canvas.Location = new Point(3, 2);
             canvas.Margin = new Padding(3, 2, 3, 2);
             canvas.MaximumSize = new Size(500, 500);

@@ -25,4 +25,10 @@ namespace QuantumSerpent
         Paused,
         GameOver
     }
+    public enum PlayerState
+    {
+        Alive,
+        Dead
+    }
+
 }
