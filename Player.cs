@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,32 +28,38 @@ namespace QuantumSerpent
 
         public void Move(Directions direction)
         {
-            const int OFFSET = 20;
+            if(hasMoved)
+            {
+                return;
+            }
             switch (direction)
             {
                 case Directions.Up:
                     items.RemoveAt(items.Count - 1);
-                    items.Insert(0, new Position(X, Y - OFFSET));
+                    items.Insert(0, new Position(X, Y-1));
                     break;
                 case Directions.Right:
                     items.RemoveAt(items.Count - 1);
-                    items.Insert(0, new Position(X + OFFSET, Y));
+                    items.Insert(0, new Position(X+1, Y));
                     break;
                 case Directions.Down:
                     items.RemoveAt(items.Count - 1);
-                    items.Insert(0, new Position(X, Y + OFFSET));
+                    items.Insert(0, new Position(X, Y + 1));
                     break;
                 case Directions.Left:
                     items.RemoveAt(items.Count - 1);
-                    items.Insert(0, new Position(X - OFFSET, Y));
+                    items.Insert(0, new Position(X - 1, Y));
                     break;
             }
         }
         public int Score => items.Count;
-
+        public Directions playerDirection { get; set; }
         public int X => items[0].X;
-        public string Name { get; set; }
         public int Y => items[0].Y;
+        public string Name { get; set; } = "";
+        public bool hasMoved { get; set; } = false;
+        
+
 
         public IEnumerable<Position> Items => items;
         public PlayerState State { get; set; } = PlayerState.Alive;

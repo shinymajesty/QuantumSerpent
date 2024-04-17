@@ -1,14 +1,13 @@
+using System.Numerics;
+
 namespace QuantumSerpent
 {
     public partial class FrmGame : Form
     {
-        Directions playerDirection = Directions.Right;
-        readonly static Player player1 = new(40, 40, 10);
-        readonly static Player player2 = new(460, 460, 10);
+        
         readonly static List<Player> playerList = [];
-        EventHandlers eventHandlers = new();
+        readonly EventHandlers eventHandlers = new();
         GameState gameState = GameState.Paused;
-        bool hasMoved = false;
 
         public FrmGame()
         {
@@ -17,42 +16,35 @@ namespace QuantumSerpent
         private void GameTimer_Tick(object sender, EventArgs e)
         {
             // Game loop
-            player1.Move(playerDirection);
-            ValidatePlayerPosition();
+            foreach (var player in playerList)
+            {
+                player.Move(player.playerDirection);
+                ValidatePlayerPosition(player);
+                player.hasMoved = false;
+            }
+            
+            canvas.Controls.Clear();
             canvas.Invalidate(); // Force redraw
-            hasMoved = false;
+            
         }
-        private void ValidatePlayerPosition()
+        private void ValidatePlayerPosition(Player player)
         {
-            if (player1.X < 0 || player1.X >= canvas.Width || player1.Y < 0 || player1.Y >= canvas.Height)
+            int scale = GameSettings.Size;
+            if(player.State == PlayerState.Dead)
             {
-                eventHandlers.TriggerGameOver();
+                return;
             }
-            foreach (Position pos in player1.Items.Skip(1))
+            if (player.X < 0 || player.X >= canvas.Width/scale || player.Y < 0 || player.Y >= canvas.Height/scale)
             {
-                if (pos.X == player1.X && pos.Y == player1.Y)
+                PlayerDied(player);
+            }
+            foreach (Position pos in player.Items.Skip(1))
+            {
+                if (pos.X == player.X && pos.Y == player.Y)
                 {
-                    eventHandlers.TriggerGameOver();
-                    player1.State = PlayerState.Dead;
+                    PlayerDied(player);
+                    player.State = PlayerState.Dead;
                 }
-            }
-        }
-        private void SetupPlayerNames()
-        {
-            foreach (Player player in playerList)
-            {
-                Label lblPlayerName = new() {
-                Text = player.Name,
-                Width = 0,
-                Height = 0,
-                AutoSize = true,
-                ForeColor = Color.White,
-                Font = new Font("Segoe UI", 12, FontStyle.Bold),
-                BackColor = Color.Transparent
-                };
-                lblPlayerName.TextAlign = ContentAlignment.MiddleLeft;
-                canvas.Controls.Add(lblPlayerName);
-                lblPlayerName.BringToFront();
             }
         }
         private void BtnStart_Click(object sender, EventArgs e)
@@ -64,11 +56,11 @@ namespace QuantumSerpent
 
             if (player1_Name != "")
             {
-                playerList.Add(new Player(40,40,3) { Name = player1_Name});
+                playerList.Add(new Player(2,2,3) { Name = player1_Name, playerDirection = Directions.Right});
             }
-            if (player1_Name != "")
+            if (player2_Name != "")
             {
-                playerList.Add(new Player(460, 460, 3) { Name = player2_Name});
+                playerList.Add(new Player(23, 2, 3) { Name = player2_Name, playerDirection = Directions.Left});
             }
 
 
@@ -78,7 +70,6 @@ namespace QuantumSerpent
             chkBot2.Enabled = false;
             btnDifficulty.Enabled = false;
 
-            SetupPlayerNames();
 
             gameTimer.Interval = GameSettings.Difficulty switch
             {
@@ -93,9 +84,9 @@ namespace QuantumSerpent
         }
         private void Canvas_Paint(object sender, PaintEventArgs e)
         {
+            int scale = GameSettings.Size;
             // Draw the whole game situation
             Graphics graphics = e.Graphics;
-
             // Draw the player
             if (gameState == GameState.Running)
             {
@@ -114,12 +105,24 @@ namespace QuantumSerpent
                             {
                                 brush = Brushes.Black;
                             }
-                            graphics.FillRectangle(brush, item.X, item.Y, 20, 20);
-                            if (canvas.Controls.Find("lblPlayer1Name", true).FirstOrDefault() is Label lblName)
-                            {
-                                lblName.Location = new Point((player.X - lblName.Width / 2 + 10), player.Y - 20);
-                            }
+                            graphics.FillRectangle(brush, item.X*scale, item.Y*scale, scale, scale);
                         }
+
+                        var nameLabel = new Label()
+                        {
+                            Text = player.Name,
+                            AutoSize = true,
+                            Width = 0,
+                            Height = 0,
+                            ForeColor = Color.White,
+                            Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                            BackColor = Color.Transparent,
+                            TextAlign = ContentAlignment.MiddleCenter
+                        };
+                        Size preferredSize = nameLabel.GetPreferredSize(Size.Empty);
+                        int newWidth = preferredSize.Width;
+                        nameLabel.Location = new Point((player.X * scale - newWidth/2), (player.Y * scale - 20));
+                        canvas.Controls.Add(nameLabel);
                     }
                 }
 
@@ -133,20 +136,38 @@ namespace QuantumSerpent
             {
                 return;
             }
-            Directions newDirection = e.KeyCode switch
+            if (playerList[0] != null)
             {
-                Keys.Right when playerDirection != Directions.Left && !hasMoved => Directions.Right,
-                Keys.Left when playerDirection != Directions.Right && !hasMoved => Directions.Left,
-                Keys.Up when playerDirection != Directions.Down && !hasMoved  => Directions.Up,
-                Keys.Down when playerDirection != Directions.Up && !hasMoved  => Directions.Down,
-                _ => playerDirection
-            };
-            hasMoved = true;
-            playerDirection = newDirection;
+                Directions newDirection = e.KeyCode switch
+                {
+                    Keys.Right when playerList[0].playerDirection != Directions.Left => Directions.Right,
+                    Keys.Left when playerList[0].playerDirection != Directions.Right => Directions.Left,
+                    Keys.Up when playerList[0].playerDirection != Directions.Down => Directions.Up,
+                    Keys.Down when playerList[0].playerDirection != Directions.Up => Directions.Down,
+                    _ => playerList[0].playerDirection
+                };
+                playerList[0].playerDirection = newDirection;
+                playerList[0].hasMoved = true;
+            }
+            if (playerList[1] != null)
+            {
+                Directions newDirection = e.KeyCode switch
+                {
+                    Keys.D when playerList[1].playerDirection != Directions.Left => Directions.Right,
+                    Keys.A when playerList[1].playerDirection != Directions.Right => Directions.Left,
+                    Keys.W when playerList[1].playerDirection != Directions.Down => Directions.Up,
+                    Keys.S when playerList[1].playerDirection != Directions.Up => Directions.Down,
+                    _ => playerList[1].playerDirection
+                };
+                playerList[1].playerDirection = newDirection;
+                playerList[1].hasMoved = true;
+            }
+            
+            
         }
         private void FrmGame_Load(object sender, EventArgs e)
         {
-            eventHandlers.GameOver += GameOver;
+            lblMSG.Visible = false;
         }
         private void BtnDifficulty_Click(object sender, EventArgs e)
         {
@@ -172,46 +193,18 @@ namespace QuantumSerpent
                 _ => Color.Green
             };
         }
-        private void GameOver(object sender, EventArgs e)
+        private void PlayerDied(Player player)
         {
-            gameTimer.Enabled = false;
-            gameState = GameState.GameOver;
             canvas.Invalidate();
-            DrawGameOver();
+            player.State = PlayerState.Dead;
+            FlashText(player.Name + " died", Color.Red);
         }
-        private void DrawGameOver()
+        private void FlashText(string text, Color color)
         {
-            Label lblGameOver = new();
-            lblGameOver.Text = "Game Over";
-            lblGameOver.AutoSize = true;
-            lblGameOver.Font = new Font("Segoe UI", 36, FontStyle.Bold);
-            lblGameOver.ForeColor = Color.Red;
-            lblGameOver.BackColor = Color.Transparent;
-            lblGameOver.Location = new Point((lblGameOver.Width), (lblGameOver.Height + 20));
-
-            canvas.Controls.Add(lblGameOver);
-
-            Label lblScore = new();
-            lblScore.Text = $"Score";
-            lblScore.AutoSize = true;
-            lblScore.Font = new Font("Segoe UI", 24, FontStyle.Bold);
-            lblScore.ForeColor = Color.Red;
-            lblScore.BackColor = Color.Transparent;
-            lblScore.Location = new Point(canvas.Width / 2 - lblScore.Width / 2, lblScore.Height + 20 + lblGameOver.Height);
-            canvas.Controls.Add(lblScore);
-
-            Label lblScoreValues = new();
-            lblScoreValues.Text = $"Player 1: {player1.Score} - Player 2: {player1.Score}";
-            lblScoreValues.AutoSize = true;
-            lblScoreValues.Font = new Font("Segoe UI", 24, FontStyle.Bold);
-            lblScoreValues.ForeColor = Color.Red;
-            lblScoreValues.BackColor = Color.Transparent;
-            lblGameOver.TextAlign = ContentAlignment.MiddleCenter;
-            lblGameOver.Anchor = AnchorStyles.Top;
-            lblScoreValues.Location = new Point(canvas.Width/2 - lblScoreValues.Width * 2, lblScore.Height + 10 + lblGameOver.Height + lblScore.Height);
-            canvas.Controls.Add(lblScoreValues);
-
-            canvas.BackgroundImage = null;
+            lblMSG.Text = text;
+            lblMSG.ForeColor = color;
+            lblMSG.Visible = true;
         }
+
     }
 }

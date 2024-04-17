@@ -8,7 +8,7 @@ namespace QuantumSerpent
 {
     class FoodGenerator(Player player)
     {
-        private readonly Random random = new Random();
+        private readonly Random random = new();
         private readonly int width;
         private readonly int height;
         private readonly Player player = player;

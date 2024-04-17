@@ -36,6 +36,7 @@
             pnlTitleBackground = new Panel();
             lblTitle = new Label();
             pnlCanvasBG = new Panel();
+            lblMSG = new Label();
             tLPGameStats = new TableLayoutPanel();
             lblScore = new Label();
             label2 = new Label();
@@ -123,13 +124,27 @@
             // pnlCanvasBG
             // 
             pnlCanvasBG.BackColor = Color.Aqua;
-            pnlCanvasBG.Controls.Add(tLPGameStats);
+            pnlCanvasBG.Controls.Add(lblMSG);
             pnlCanvasBG.Controls.Add(canvas);
+            pnlCanvasBG.Controls.Add(tLPGameStats);
             pnlCanvasBG.Dock = DockStyle.Left;
             pnlCanvasBG.Location = new Point(0, 0);
             pnlCanvasBG.Name = "pnlCanvasBG";
             pnlCanvasBG.Size = new Size(506, 581);
             pnlCanvasBG.TabIndex = 5;
+            // 
+            // lblMSG
+            // 
+            lblMSG.AutoSize = true;
+            lblMSG.BackColor = Color.Black;
+            lblMSG.Font = new Font("Segoe UI", 25F);
+            lblMSG.ForeColor = Color.Red;
+            lblMSG.Location = new Point(29, 235);
+            lblMSG.Name = "lblMSG";
+            lblMSG.Size = new Size(453, 46);
+            lblMSG.TabIndex = 8;
+            lblMSG.Text = "YOU DUMB BOX WORKKKKK";
+            lblMSG.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // tLPGameStats
             // 
@@ -379,6 +394,7 @@
             ((System.ComponentModel.ISupportInitialize)canvas).EndInit();
             pnlTitleBackground.ResumeLayout(false);
             pnlCanvasBG.ResumeLayout(false);
+            pnlCanvasBG.PerformLayout();
             tLPGameStats.ResumeLayout(false);
             tLPGameStats.PerformLayout();
             tLPSettings.ResumeLayout(false);
@@ -413,5 +429,6 @@
         private CheckBox chkBot2;
         private Label lblDifficulty;
         private Button btnDifficulty;
+        private Label lblMSG;
     }
 }
