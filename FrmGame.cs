@@ -5,8 +5,7 @@ namespace QuantumSerpent
     public partial class FrmGame : Form
     {
         
-        readonly static List<Player> playerList = [];
-        readonly EventHandlers eventHandlers = new();
+        readonly static Player[] playerList = new Player[4];
         GameState gameState = GameState.Paused;
 
         public FrmGame()
@@ -18,9 +17,13 @@ namespace QuantumSerpent
             // Game loop
             foreach (var player in playerList)
             {
-                player.Move(player.playerDirection);
+                if(player == null)
+                {
+                    continue;
+                }
+                player.Move(player.PlayerDirection);
                 ValidatePlayerPosition(player);
-                player.hasMoved = false;
+                player.HasMoved = false;
             }
             
             canvas.Controls.Clear();
@@ -56,11 +59,11 @@ namespace QuantumSerpent
 
             if (player1_Name != "")
             {
-                playerList.Add(new Player(2,2,3) { Name = player1_Name, playerDirection = Directions.Right});
+                playerList[0] = (new Player(2,2,3) { Name = player1_Name, PlayerDirection = Directions.Right});
             }
             if (player2_Name != "")
             {
-                playerList.Add(new Player(23, 2, 3) { Name = player2_Name, playerDirection = Directions.Left});
+                playerList[1] = (new Player(23, 2, 3) { Name = player2_Name, PlayerDirection = Directions.Left });
             }
 
 
@@ -81,6 +84,7 @@ namespace QuantumSerpent
             gameTimer.Enabled = true;
             btnStart.Enabled = false;
             gameState = GameState.Running;
+            this.Focus();
         }
         private void Canvas_Paint(object sender, PaintEventArgs e)
         {
@@ -92,6 +96,7 @@ namespace QuantumSerpent
             {
                 foreach(Player player in playerList)
                 {
+                    if (player == null) continue;
                     if (player.State == PlayerState.Alive)
                     {
                         foreach (Position item in player.Items)
@@ -136,34 +141,44 @@ namespace QuantumSerpent
             {
                 return;
             }
-            if (playerList[0] != null)
+
+            UpdatePlayerDirection(playerList[0], e, Keys.Right, Keys.Left, Keys.Up, Keys.Down);
+            UpdatePlayerDirection(playerList[1], e, Keys.D, Keys.A, Keys.W, Keys.S);
+        }
+
+
+
+        private void UpdatePlayerDirection(Player player, KeyEventArgs e, Keys rightKey, Keys leftKey, Keys upKey, Keys downKey)
+        {
+            if (player != null)
             {
-                Directions newDirection = e.KeyCode switch
+                Directions newDirection;
+
+                // Convert key presses to directions
+                if (e.KeyCode == rightKey && player.PlayerDirection != Directions.Left)
                 {
-                    Keys.Right when playerList[0].playerDirection != Directions.Left => Directions.Right,
-                    Keys.Left when playerList[0].playerDirection != Directions.Right => Directions.Left,
-                    Keys.Up when playerList[0].playerDirection != Directions.Down => Directions.Up,
-                    Keys.Down when playerList[0].playerDirection != Directions.Up => Directions.Down,
-                    _ => playerList[0].playerDirection
-                };
-                playerList[0].playerDirection = newDirection;
-                playerList[0].hasMoved = true;
-            }
-            if (playerList[1] != null)
-            {
-                Directions newDirection = e.KeyCode switch
+                    newDirection = Directions.Right;
+                }
+                else if (e.KeyCode == leftKey && player.PlayerDirection != Directions.Right)
                 {
-                    Keys.D when playerList[1].playerDirection != Directions.Left => Directions.Right,
-                    Keys.A when playerList[1].playerDirection != Directions.Right => Directions.Left,
-                    Keys.W when playerList[1].playerDirection != Directions.Down => Directions.Up,
-                    Keys.S when playerList[1].playerDirection != Directions.Up => Directions.Down,
-                    _ => playerList[1].playerDirection
-                };
-                playerList[1].playerDirection = newDirection;
-                playerList[1].hasMoved = true;
+                    newDirection = Directions.Left;
+                }
+                else if (e.KeyCode == upKey && player.PlayerDirection != Directions.Down)
+                {
+                    newDirection = Directions.Up;
+                }
+                else if (e.KeyCode == downKey && player.PlayerDirection != Directions.Up)
+                {
+                    newDirection = Directions.Down;
+                }
+                else
+                {
+                    newDirection = player.PlayerDirection;
+                }
+
+                player.PlayerDirection = newDirection;
+                player.HasMoved = true;
             }
-            
-            
         }
         private void FrmGame_Load(object sender, EventArgs e)
         {

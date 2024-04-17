@@ -28,7 +28,7 @@ namespace QuantumSerpent
 
         public void Move(Directions direction)
         {
-            if(hasMoved)
+            if(HasMoved)
             {
                 return;
             }
@@ -53,11 +53,11 @@ namespace QuantumSerpent
             }
         }
         public int Score => items.Count;
-        public Directions playerDirection { get; set; }
+        public Directions PlayerDirection { get; set; }
         public int X => items[0].X;
         public int Y => items[0].Y;
         public string Name { get; set; } = "";
-        public bool hasMoved { get; set; } = false;
+        public bool HasMoved { get; set; } = false;
         
 
 
