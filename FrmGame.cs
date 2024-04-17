@@ -4,9 +4,9 @@ namespace QuantumSerpent
 {
     public partial class FrmGame : Form
     {
-        
         readonly static Player[] playerList = new Player[4];
         GameState gameState = GameState.Paused;
+        
 
         public FrmGame()
         {
@@ -30,6 +30,7 @@ namespace QuantumSerpent
             canvas.Invalidate(); // Force redraw
             
         }
+        
         private void ValidatePlayerPosition(Player player)
         {
             int scale = GameSettings.Size;
@@ -130,10 +131,7 @@ namespace QuantumSerpent
                         canvas.Controls.Add(nameLabel);
                     }
                 }
-
             }
-            
-            
         }
         private void FrmGame_KeyDown(object sender, KeyEventArgs e)
         {
@@ -148,7 +146,7 @@ namespace QuantumSerpent
 
 
 
-        private void UpdatePlayerDirection(Player player, KeyEventArgs e, Keys rightKey, Keys leftKey, Keys upKey, Keys downKey)
+        private static void UpdatePlayerDirection(Player player, KeyEventArgs e, Keys rightKey, Keys leftKey, Keys upKey, Keys downKey)
         {
             if (player != null)
             {
@@ -183,6 +181,7 @@ namespace QuantumSerpent
         private void FrmGame_Load(object sender, EventArgs e)
         {
             lblMSG.Visible = false;
+            //Create Frame Buffer offscreen
         }
         private void BtnDifficulty_Click(object sender, EventArgs e)
         {
@@ -220,6 +219,8 @@ namespace QuantumSerpent
             lblMSG.ForeColor = color;
             lblMSG.Visible = true;
         }
+
+        
 
     }
 }

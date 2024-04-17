@@ -408,6 +408,9 @@
         #endregion
 
         private PictureBox canvas;
+
+        public PictureBox buffer { get; private set; }
+
         private System.Windows.Forms.Timer gameTimer;
         private Button btnStart;
         private Panel pnlTitleBackground;
