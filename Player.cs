@@ -9,9 +9,9 @@ namespace QuantumSerpent
 {
     class Player
     {
-        readonly List<Position> items = [];
-
-        public Player(int x, int y, int initialLength = 3)
+        private readonly List<Position> items = [];
+        Directions direction;
+        public Player(int x, int y, Directions initialDirection, int initialLength = 3)
         {
             if (initialLength < 1)
             {
@@ -22,13 +22,32 @@ namespace QuantumSerpent
             {
                 items.Add(new Position(x, y));
             }
+            direction = initialDirection;
         }
 
-        
 
+        public void HandleKey(Keys keycode)
+        {
+            if(keycode == UpKey)
+            {
+                PlayerDirection = Directions.Up;
+            }
+            else if(keycode == DownKey)
+            {
+                PlayerDirection = Directions.Down;
+            }
+            else if(keycode == LeftKey)
+            {
+                PlayerDirection = Directions.Left;
+            }
+            else if(keycode == RightKey)
+            {
+                PlayerDirection = Directions.Right;
+            }
+        }
         public void Move(Directions direction)
         {
-            if(HasMoved)
+            if (HasMoved)
             {
                 return;
             }
@@ -36,11 +55,11 @@ namespace QuantumSerpent
             {
                 case Directions.Up:
                     items.RemoveAt(items.Count - 1);
-                    items.Insert(0, new Position(X, Y-1));
+                    items.Insert(0, new Position(X, Y - 1));
                     break;
                 case Directions.Right:
                     items.RemoveAt(items.Count - 1);
-                    items.Insert(0, new Position(X+1, Y));
+                    items.Insert(0, new Position(X + 1, Y));
                     break;
                 case Directions.Down:
                     items.RemoveAt(items.Count - 1);
@@ -53,12 +72,32 @@ namespace QuantumSerpent
             }
         }
         public int Score => items.Count;
-        public Directions PlayerDirection { get; set; }
+
+        
+        public Directions PlayerDirection
+        {
+            get => direction;
+            set
+            {
+                if (value == Directions.Up && direction != Directions.Down ||
+                   value == Directions.Right && direction != Directions.Left ||
+                   value == Directions.Down && direction != Directions.Up ||
+                   value == Directions.Left && direction != Directions.Right)
+                {
+                    direction = value;
+                }
+            }
+        }
         public int X => items[0].X;
         public int Y => items[0].Y;
         public string Name { get; set; } = "";
         public bool HasMoved { get; set; } = false;
-        
+        public Keys UpKey { get; set; } = Keys.Up;
+        public Keys DownKey { get; set; } = Keys.Down;
+        public Keys LeftKey { get; set; } = Keys.Left;
+        public Keys RightKey { get; set; } = Keys.Right;
+        public Brush BodyColor { get; set; } = Brushes.Black;
+        public Brush HeadColor { get; set; } = Brushes.Green;
 
 
         public IEnumerable<Position> Items => items;

@@ -77,7 +77,7 @@
             // 
             // gameTimer
             // 
-            gameTimer.Interval = 166;
+            gameTimer.Interval = 250;
             gameTimer.Tick += GameTimer_Tick;
             // 
             // btnStart
@@ -135,15 +135,13 @@
             // 
             // lblMSG
             // 
-            lblMSG.AutoSize = true;
             lblMSG.BackColor = Color.Black;
-            lblMSG.Font = new Font("Segoe UI", 25F);
+            lblMSG.Font = new Font("Segoe UI", 24F);
             lblMSG.ForeColor = Color.Red;
-            lblMSG.Location = new Point(29, 235);
+            lblMSG.Location = new Point(6, 235);
             lblMSG.Name = "lblMSG";
-            lblMSG.Size = new Size(453, 46);
+            lblMSG.Size = new Size(497, 62);
             lblMSG.TabIndex = 8;
-            lblMSG.Text = "YOU DUMB BOX WORKKKKK";
             lblMSG.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // tLPGameStats
@@ -394,7 +392,6 @@
             ((System.ComponentModel.ISupportInitialize)canvas).EndInit();
             pnlTitleBackground.ResumeLayout(false);
             pnlCanvasBG.ResumeLayout(false);
-            pnlCanvasBG.PerformLayout();
             tLPGameStats.ResumeLayout(false);
             tLPGameStats.PerformLayout();
             tLPSettings.ResumeLayout(false);
