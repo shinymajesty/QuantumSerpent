@@ -4,14 +4,19 @@ namespace QuantumSerpent
 {
     public partial class FrmGame : Form
     {
-        readonly static Player[] playerList = new Player[4];
+        readonly Random rnd = new ();
+        readonly static List<Player> playerList = [];
+        readonly List<Food> foodList = [];
         GameState gameState = GameState.Paused;
         int MaxHeight => canvas.Height / GameSettings.Size;
         int MaxWidth => canvas.Width / GameSettings.Size;
 
+        public Random Rnd => rnd;
+
         public FrmGame()
         {
             InitializeComponent();
+            CreateFood();
         }
         private void GameTimer_Tick(object sender, EventArgs e)
         {
@@ -28,6 +33,46 @@ namespace QuantumSerpent
             ValidatePlayerPosition();
             canvas.Controls.Clear();
             canvas.Invalidate(); // Force redraw
+
+        }
+
+        private void CreateFood()
+        {
+            int x;
+            int y;
+            bool success;
+            do
+            {
+                x = Rnd.Next(0, MaxWidth);
+                y = Rnd.Next(0, MaxHeight);
+                //Check if the food is not on a player
+                success = true;
+
+                foreach(var player in playerList)
+                {
+                    if (player == null) continue;
+                    foreach (var item in player.Items)
+                    {
+                        var newPos = new Position(x, y);
+                        if (newPos == item)
+                        {
+                            success = false;
+                            break;
+                        }
+                    }
+                }
+                foreach (var food in foodList)
+                {
+                    var newPos = new Position(x, y);
+                    if (newPos == food.Position)
+                    {
+                        success = false;
+                        break;
+                    }
+                }
+            } while (!success);
+
+            foodList.Add(new Food(x, y));
 
         }
         private void ValidatePlayerPosition()
@@ -64,50 +109,33 @@ namespace QuantumSerpent
                         }
                     }
                 }
+
+                //Check if player has collided with food
+                foreach (var food in foodList)
+                {
+                    var newPos = new Position(player1.X, player1.Y);
+                    if (newPos == food.Position)
+                    {
+                        player1.Eat(food);
+                        foodList.Remove(food);
+                        CreateFood();
+                        break; //not possible that there is more than one food at the same position
+                    }
+                }
             }
 
         }
         private void BtnStart_Click(object sender, EventArgs e)
         {
-            string player1_Name = txtName1.Text;
-            string player2_Name = txtName2.Text;
             GameSettings.Bot1 = chkBot1.Checked;
             GameSettings.Bot2 = chkBot2.Checked;
-
-            if (player1_Name != "")
-            {
-                playerList[0] = (new Player(2, 2, Directions.Right, 3)
-                {
-                    Name = player1_Name,
-                    DownKey = Keys.Down,
-                    UpKey = Keys.Up,
-                    LeftKey = Keys.Left,
-                    RightKey = Keys.Right,
-                    HeadColor = Brushes.LimeGreen,
-                    BodyColor = Brushes.Black
-                });
-            }
-            if (player2_Name != "")
-            {
-                playerList[1] = (new Player(23, 2, Directions.Left, 3)
-                {
-                    Name = player2_Name,
-                    DownKey = Keys.S,
-                    UpKey = Keys.W,
-                    LeftKey = Keys.A,
-                    RightKey = Keys.D,
-                    HeadColor = Brushes.Red,
-                    BodyColor = Brushes.Blue
-                });
-            }
-
 
             txtName1.Enabled = false;
             txtName2.Enabled = false;
             chkBot1.Enabled = false;
             chkBot2.Enabled = false;
             btnDifficulty.Enabled = false;
-
+            btnSpawn.Enabled = false;
 
             gameTimer.Interval = GameSettings.Difficulty switch
             {
@@ -167,6 +195,9 @@ namespace QuantumSerpent
                     }
                 }
             }
+            // Draw the food
+            foreach (Food food in foodList)
+            offScreenGraphics.FillRectangle(Brushes.Red, food.Position.X * scale, food.Position.Y * scale, scale, scale);
 
             // Draw the off-screen bitmap to the screen
             e.Graphics.DrawImage(offScreenBitmap, 0, 0);
@@ -216,20 +247,34 @@ namespace QuantumSerpent
         {
             canvas.Invalidate();
             player.State = PlayerState.Dead;
-            FlashText(player.Name + " died", Color.Red);
-        }
-        
+            bool allDead = true;
+            foreach(var item in playerList)
+            {
+                if(item.State == PlayerState.Alive)
+                {
+                    allDead = false;
+                    break;
+                }
+            }
+            if(allDead)
+            {
 
-        private async void FlashText(string text, Color color)
+            }
+        }
+
+
+
+        private void Button1_Click(object sender, EventArgs e)
         {
-            lblMSG.Text = text;
-            lblMSG.ForeColor = color;
-            lblMSG.Visible = true;
-
-            await Task.Delay(1000); // Wait for 1 second
-
-            lblMSG.Visible = false;
+            //Factory -> Spawns Players
+            try
+            {
+                playerList.Add(Player.Create(MaxWidth,MaxHeight, "Name1"));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
-
     }
 }

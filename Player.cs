@@ -11,7 +11,7 @@ namespace QuantumSerpent
     {
         private readonly List<Position> items = [];
         Directions direction;
-        public Player(int x, int y, Directions initialDirection, int initialLength = 3)
+        private Player(int x, int y, Directions initialDirection, int initialLength = 3)
         {
             if (initialLength < 1)
             {
@@ -102,6 +102,43 @@ namespace QuantumSerpent
 
         public IEnumerable<Position> Items => items;
         public PlayerState State { get; set; } = PlayerState.Alive;
+        private static int instanceCount = 0;
+        public static Player Create(int maxWidth, int maxHeight, string name)
+        {
+            instanceCount++;
+            int x = 0;
+            int y = 0;
+            Directions direction = Directions.Left;
+            switch(instanceCount)
+            {
+                case 1:
+                    x = 2;
+                    y = maxHeight - 2;
+                    direction = Directions.Up;
+                    return new Player(x, y, direction);
+                case 2:
+                    x = maxWidth - 2;
+                    y = 2;
+                    direction = Directions.Left;
+                    return new Player(x, y, direction)
+                    {
+                        UpKey = Keys.W,
+                        DownKey = Keys.S,
+                        LeftKey = Keys.A,
+                        RightKey = Keys.D,
+                        Name = name,
+                        BodyColor = Brushes.Blue,
+                        HeadColor = Brushes.Red
+                    };
 
+                default:
+                    throw new InvalidOperationException("Only 2 players are allowed");
+            }
+        }
+        public void Eat(Food food)
+        {
+            for(int i = 0; i < food.Energy; i++)
+            items.Add(new Position(X,Y));
+        }
     }
 }

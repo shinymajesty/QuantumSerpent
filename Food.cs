@@ -8,7 +8,7 @@ namespace QuantumSerpent
 {
     class Food(int x, int y)
     {
-        public int X { get; set; } = x;
-        public int Y { get; set; } = y;
+        public Position Position { get; set; } = new Position(x, y);
+        public int Energy { get; set; } = 1;
     }
 }

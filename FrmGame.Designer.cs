@@ -53,6 +53,7 @@
             chkBot2 = new CheckBox();
             btnDifficulty = new Button();
             pnlSettingsBG = new Panel();
+            btnSpawn = new Button();
             ((System.ComponentModel.ISupportInitialize)canvas).BeginInit();
             pnlTitleBackground.SuspendLayout();
             pnlCanvasBG.SuspendLayout();
@@ -372,12 +373,23 @@
             pnlSettingsBG.Size = new Size(505, 233);
             pnlSettingsBG.TabIndex = 7;
             // 
+            // btnSpawn
+            // 
+            btnSpawn.Location = new Point(509, 513);
+            btnSpawn.Name = "btnSpawn";
+            btnSpawn.Size = new Size(231, 65);
+            btnSpawn.TabIndex = 8;
+            btnSpawn.Text = "button1";
+            btnSpawn.UseVisualStyleBackColor = true;
+            btnSpawn.Click += Button1_Click;
+            // 
             // FrmGame
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(15, 15, 15);
             ClientSize = new Size(1020, 581);
+            Controls.Add(btnSpawn);
             Controls.Add(pnlTitleBackground);
             Controls.Add(btnStart);
             Controls.Add(pnlCanvasBG);
@@ -430,5 +442,6 @@
         private Label lblDifficulty;
         private Button btnDifficulty;
         private Label lblMSG;
+        private Button btnSpawn;
     }
 }

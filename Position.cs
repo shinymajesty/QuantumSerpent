@@ -11,5 +11,10 @@ namespace QuantumSerpent
         public int X { get; set; } = x;
 
         public int Y { get; set; } = y;
+        public static bool operator ==(Position a, Position b)
+        {
+            return a.X == b.X && a.Y == b.Y;
+        }
+        public static bool operator !=(Position a, Position b) => !(a == b);
     }
 }
