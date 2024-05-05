@@ -1,6 +1,6 @@
 ﻿namespace QuantumSerpent
 {
-    partial class FrmGame
+    partial class SinglePlayer
     {
         /// <summary>
         ///  Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmGame));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SinglePlayer));
             canvas = new PictureBox();
             gameTimer = new System.Windows.Forms.Timer(components);
             btnStart = new Button();
@@ -43,17 +43,17 @@
             label3 = new Label();
             tLPSettings = new TableLayoutPanel();
             lblDifficulty = new Label();
-            txtName2 = new TextBox();
             lblPlayer1 = new Label();
             lblBots = new Label();
-            lblPlayer2 = new Label();
             txtName1 = new TextBox();
             tableLayoutPanel3 = new TableLayoutPanel();
             chkBot1 = new CheckBox();
             chkBot2 = new CheckBox();
             btnDifficulty = new Button();
-            pnlSettingsBG = new Panel();
             btnSpawn = new Button();
+            pnlSettingsBG = new Panel();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            button1 = new Button();
             ((System.ComponentModel.ISupportInitialize)canvas).BeginInit();
             pnlTitleBackground.SuspendLayout();
             pnlCanvasBG.SuspendLayout();
@@ -61,6 +61,7 @@
             tLPSettings.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
             pnlSettingsBG.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // canvas
@@ -83,15 +84,15 @@
             // 
             // btnStart
             // 
-            btnStart.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnStart.BackColor = Color.FromArgb(15, 15, 15);
+            btnStart.Dock = DockStyle.Fill;
             btnStart.FlatStyle = FlatStyle.Flat;
             btnStart.Font = new Font("Segoe UI Semibold", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             btnStart.ForeColor = Color.LimeGreen;
-            btnStart.Location = new Point(808, 513);
+            btnStart.Location = new Point(255, 2);
             btnStart.Margin = new Padding(3, 2, 3, 2);
             btnStart.Name = "btnStart";
-            btnStart.Size = new Size(207, 65);
+            btnStart.Size = new Size(247, 67);
             btnStart.TabIndex = 1;
             btnStart.Text = "Start";
             btnStart.UseVisualStyleBackColor = false;
@@ -211,13 +212,12 @@
             tLPSettings.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23.647295F));
             tLPSettings.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 76.35271F));
             tLPSettings.Controls.Add(lblDifficulty, 0, 3);
-            tLPSettings.Controls.Add(txtName2, 1, 1);
             tLPSettings.Controls.Add(lblPlayer1, 0, 0);
             tLPSettings.Controls.Add(lblBots, 0, 2);
-            tLPSettings.Controls.Add(lblPlayer2, 0, 1);
             tLPSettings.Controls.Add(txtName1, 1, 0);
             tLPSettings.Controls.Add(tableLayoutPanel3, 1, 2);
             tLPSettings.Controls.Add(btnDifficulty, 1, 3);
+            tLPSettings.Controls.Add(btnSpawn, 1, 1);
             tLPSettings.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
             tLPSettings.Location = new Point(3, 3);
             tLPSettings.Name = "tLPSettings";
@@ -241,18 +241,6 @@
             lblDifficulty.Text = "Diffculty";
             lblDifficulty.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // txtName2
-            // 
-            txtName2.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            txtName2.BackColor = Color.FromArgb(15, 15, 15);
-            txtName2.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold);
-            txtName2.ForeColor = Color.Aqua;
-            txtName2.Location = new Point(121, 64);
-            txtName2.MaxLength = 16;
-            txtName2.Name = "txtName2";
-            txtName2.Size = new Size(375, 39);
-            txtName2.TabIndex = 4;
-            // 
             // lblPlayer1
             // 
             lblPlayer1.Dock = DockStyle.Fill;
@@ -262,7 +250,7 @@
             lblPlayer1.Name = "lblPlayer1";
             lblPlayer1.Size = new Size(112, 56);
             lblPlayer1.TabIndex = 0;
-            lblPlayer1.Text = "Player 1:";
+            lblPlayer1.Text = "Player Name";
             lblPlayer1.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // lblBots
@@ -276,18 +264,6 @@
             lblBots.TabIndex = 2;
             lblBots.Text = "Bots";
             lblBots.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // lblPlayer2
-            // 
-            lblPlayer2.Dock = DockStyle.Fill;
-            lblPlayer2.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold);
-            lblPlayer2.ForeColor = Color.Aqua;
-            lblPlayer2.Location = new Point(3, 56);
-            lblPlayer2.Name = "lblPlayer2";
-            lblPlayer2.Size = new Size(112, 56);
-            lblPlayer2.TabIndex = 1;
-            lblPlayer2.Text = "Player 2:";
-            lblPlayer2.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // txtName1
             // 
@@ -363,6 +339,20 @@
             btnDifficulty.UseVisualStyleBackColor = true;
             btnDifficulty.Click += BtnDifficulty_Click;
             // 
+            // btnSpawn
+            // 
+            btnSpawn.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnSpawn.FlatStyle = FlatStyle.Flat;
+            btnSpawn.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnSpawn.ForeColor = Color.LimeGreen;
+            btnSpawn.Location = new Point(293, 59);
+            btnSpawn.Name = "btnSpawn";
+            btnSpawn.Size = new Size(203, 50);
+            btnSpawn.TabIndex = 8;
+            btnSpawn.Text = "Add Player";
+            btnSpawn.UseVisualStyleBackColor = true;
+            btnSpawn.Click += Button1_Click;
+            // 
             // pnlSettingsBG
             // 
             pnlSettingsBG.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
@@ -373,32 +363,52 @@
             pnlSettingsBG.Size = new Size(505, 233);
             pnlSettingsBG.TabIndex = 7;
             // 
-            // btnSpawn
+            // tableLayoutPanel1
             // 
-            btnSpawn.Location = new Point(509, 513);
-            btnSpawn.Name = "btnSpawn";
-            btnSpawn.Size = new Size(231, 65);
-            btnSpawn.TabIndex = 8;
-            btnSpawn.Text = "button1";
-            btnSpawn.UseVisualStyleBackColor = true;
-            btnSpawn.Click += Button1_Click;
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.Controls.Add(button1, 0, 0);
+            tableLayoutPanel1.Controls.Add(btnStart, 1, 0);
+            tableLayoutPanel1.Location = new Point(512, 507);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.Size = new Size(505, 71);
+            tableLayoutPanel1.TabIndex = 8;
             // 
-            // FrmGame
+            // button1
+            // 
+            button1.BackColor = Color.FromArgb(15, 15, 15);
+            button1.Dock = DockStyle.Fill;
+            button1.FlatStyle = FlatStyle.Flat;
+            button1.Font = new Font("Segoe UI Semibold", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            button1.ForeColor = Color.Red;
+            button1.Location = new Point(3, 2);
+            button1.Margin = new Padding(3, 2, 3, 2);
+            button1.Name = "button1";
+            button1.Size = new Size(246, 67);
+            button1.TabIndex = 2;
+            button1.Text = "Back";
+            button1.UseVisualStyleBackColor = false;
+            button1.Click += button1_Click_1;
+            // 
+            // SinglePlayer
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(15, 15, 15);
             ClientSize = new Size(1020, 581);
-            Controls.Add(btnSpawn);
+            Controls.Add(tableLayoutPanel1);
             Controls.Add(pnlTitleBackground);
-            Controls.Add(btnStart);
             Controls.Add(pnlCanvasBG);
             Controls.Add(pnlSettingsBG);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(3, 2, 3, 2);
             MinimumSize = new Size(500, 500);
-            Name = "FrmGame";
+            Name = "SinglePlayer";
             Text = "FrmGame";
+            FormClosed += SinglePlayer_FormClosed;
             Load += FrmGame_Load;
             KeyDown += FrmGame_KeyDown;
             ((System.ComponentModel.ISupportInitialize)canvas).EndInit();
@@ -411,6 +421,7 @@
             tableLayoutPanel3.ResumeLayout(false);
             tableLayoutPanel3.PerformLayout();
             pnlSettingsBG.ResumeLayout(false);
+            tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -431,10 +442,8 @@
         private Label label3;
         private TableLayoutPanel tLPSettings;
         private Label lblPlayer1;
-        private Label lblPlayer2;
         private Panel pnlSettingsBG;
         private Label lblBots;
-        private TextBox txtName2;
         private TextBox txtName1;
         private TableLayoutPanel tableLayoutPanel3;
         private CheckBox chkBot1;
@@ -443,5 +452,7 @@
         private Button btnDifficulty;
         private Label lblMSG;
         private Button btnSpawn;
+        private TableLayoutPanel tableLayoutPanel1;
+        private Button button1;
     }
 }

@@ -2,9 +2,10 @@ using System.Numerics;
 
 namespace QuantumSerpent
 {
-    public partial class FrmGame : Form
+    public partial class SinglePlayer : Form
     {
-        readonly Random rnd = new ();
+        private MainMenu mainMenu;
+        readonly Random rnd = new();
         readonly static List<Player> playerList = [];
         readonly List<Food> foodList = [];
         GameState gameState = GameState.Paused;
@@ -13,10 +14,10 @@ namespace QuantumSerpent
 
         public Random Rnd => rnd;
 
-        public FrmGame()
+        public SinglePlayer(MainMenu formCreator)
         {
             InitializeComponent();
-            CreateFood();
+            mainMenu = formCreator;
         }
         private void GameTimer_Tick(object sender, EventArgs e)
         {
@@ -48,7 +49,7 @@ namespace QuantumSerpent
                 //Check if the food is not on a player
                 success = true;
 
-                foreach(var player in playerList)
+                foreach (var player in playerList)
                 {
                     if (player == null) continue;
                     foreach (var item in player.Items)
@@ -131,7 +132,6 @@ namespace QuantumSerpent
             GameSettings.Bot2 = chkBot2.Checked;
 
             txtName1.Enabled = false;
-            txtName2.Enabled = false;
             chkBot1.Enabled = false;
             chkBot2.Enabled = false;
             btnDifficulty.Enabled = false;
@@ -148,6 +148,7 @@ namespace QuantumSerpent
             btnStart.Enabled = false;
             gameState = GameState.Running;
             this.Focus();
+            CreateFood();
         }
         private void Canvas_Paint(object sender, PaintEventArgs e)
         {
@@ -197,7 +198,7 @@ namespace QuantumSerpent
             }
             // Draw the food
             foreach (Food food in foodList)
-            offScreenGraphics.FillRectangle(Brushes.Red, food.Position.X * scale, food.Position.Y * scale, scale, scale);
+                offScreenGraphics.FillRectangle(Brushes.Red, food.Position.X * scale, food.Position.Y * scale, scale, scale);
 
             // Draw the off-screen bitmap to the screen
             e.Graphics.DrawImage(offScreenBitmap, 0, 0);
@@ -248,15 +249,15 @@ namespace QuantumSerpent
             canvas.Invalidate();
             player.State = PlayerState.Dead;
             bool allDead = true;
-            foreach(var item in playerList)
+            foreach (var item in playerList)
             {
-                if(item.State == PlayerState.Alive)
+                if (item.State == PlayerState.Alive)
                 {
                     allDead = false;
                     break;
                 }
             }
-            if(allDead)
+            if (allDead)
             {
 
             }
@@ -269,12 +270,25 @@ namespace QuantumSerpent
             //Factory -> Spawns Players
             try
             {
-                playerList.Add(Player.Create(MaxWidth,MaxHeight, "Name1"));
+                playerList.Add(Player.Create(MaxWidth, MaxHeight, "Name1"));
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            mainMenu.Show();
+            this.Hide();
+            this.Close();
+        }
+
+        private void SinglePlayer_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if(this.Visible == false) return;
+            mainMenu.Close();
         }
     }
 }

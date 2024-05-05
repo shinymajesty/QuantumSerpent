@@ -63,9 +63,9 @@ namespace QuantumSerpent.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap loadingScreen {
+        internal static System.Drawing.Bitmap output {
             get {
-                object obj = ResourceManager.GetObject("loadingScreen", resourceCulture);
+                object obj = ResourceManager.GetObject("output", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,9 +73,9 @@ namespace QuantumSerpent.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap output {
+        internal static System.Drawing.Bitmap QuanumSerpentFont {
             get {
-                object obj = ResourceManager.GetObject("output", resourceCulture);
+                object obj = ResourceManager.GetObject("QuanumSerpentFont", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
