@@ -39,11 +39,11 @@
             lblMSG = new Label();
             tLPGameStats = new TableLayoutPanel();
             lblScore = new Label();
-            label2 = new Label();
+            lblScore2 = new Label();
             label3 = new Label();
             tLPSettings = new TableLayoutPanel();
-            lblDifficulty = new Label();
             lblPlayer1 = new Label();
+            lblDifficulty = new Label();
             lblBots = new Label();
             txtName1 = new TextBox();
             tableLayoutPanel3 = new TableLayoutPanel();
@@ -53,7 +53,8 @@
             btnSpawn = new Button();
             pnlSettingsBG = new Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
-            button1 = new Button();
+            btnBack = new Button();
+            BtnReset = new Button();
             ((System.ComponentModel.ISupportInitialize)canvas).BeginInit();
             pnlTitleBackground.SuspendLayout();
             pnlCanvasBG.SuspendLayout();
@@ -155,7 +156,7 @@
             tLPGameStats.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
             tLPGameStats.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
             tLPGameStats.Controls.Add(lblScore, 0, 0);
-            tLPGameStats.Controls.Add(label2, 1, 0);
+            tLPGameStats.Controls.Add(lblScore2, 1, 0);
             tLPGameStats.Controls.Add(label3, 2, 0);
             tLPGameStats.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
             tLPGameStats.Location = new Point(3, 507);
@@ -178,18 +179,18 @@
             lblScore.Text = "Player 1:";
             lblScore.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // label2
+            // lblScore2
             // 
-            label2.AutoSize = true;
-            label2.Dock = DockStyle.Fill;
-            label2.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold);
-            label2.ForeColor = Color.LimeGreen;
-            label2.Location = new Point(169, 0);
-            label2.Name = "label2";
-            label2.Size = new Size(160, 71);
-            label2.TabIndex = 1;
-            label2.Text = "Player 2:";
-            label2.TextAlign = ContentAlignment.MiddleLeft;
+            lblScore2.AutoSize = true;
+            lblScore2.Dock = DockStyle.Fill;
+            lblScore2.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold);
+            lblScore2.ForeColor = Color.LimeGreen;
+            lblScore2.Location = new Point(169, 0);
+            lblScore2.Name = "lblScore2";
+            lblScore2.Size = new Size(160, 71);
+            lblScore2.TabIndex = 1;
+            lblScore2.Text = "Player 2:";
+            lblScore2.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label3
             // 
@@ -211,8 +212,8 @@
             tLPSettings.ColumnCount = 2;
             tLPSettings.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23.647295F));
             tLPSettings.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 76.35271F));
-            tLPSettings.Controls.Add(lblDifficulty, 0, 3);
             tLPSettings.Controls.Add(lblPlayer1, 0, 0);
+            tLPSettings.Controls.Add(lblDifficulty, 0, 3);
             tLPSettings.Controls.Add(lblBots, 0, 2);
             tLPSettings.Controls.Add(txtName1, 1, 0);
             tLPSettings.Controls.Add(tableLayoutPanel3, 1, 2);
@@ -229,6 +230,18 @@
             tLPSettings.Size = new Size(499, 227);
             tLPSettings.TabIndex = 6;
             // 
+            // lblPlayer1
+            // 
+            lblPlayer1.Dock = DockStyle.Fill;
+            lblPlayer1.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold);
+            lblPlayer1.ForeColor = Color.Aqua;
+            lblPlayer1.Location = new Point(3, 0);
+            lblPlayer1.Name = "lblPlayer1";
+            lblPlayer1.Size = new Size(112, 56);
+            lblPlayer1.TabIndex = 9;
+            lblPlayer1.Text = "Name:";
+            lblPlayer1.TextAlign = ContentAlignment.MiddleLeft;
+            // 
             // lblDifficulty
             // 
             lblDifficulty.Dock = DockStyle.Fill;
@@ -240,18 +253,6 @@
             lblDifficulty.TabIndex = 6;
             lblDifficulty.Text = "Diffculty";
             lblDifficulty.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // lblPlayer1
-            // 
-            lblPlayer1.Dock = DockStyle.Fill;
-            lblPlayer1.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold);
-            lblPlayer1.ForeColor = Color.Aqua;
-            lblPlayer1.Location = new Point(3, 0);
-            lblPlayer1.Name = "lblPlayer1";
-            lblPlayer1.Size = new Size(112, 56);
-            lblPlayer1.TabIndex = 0;
-            lblPlayer1.Text = "Player Name";
-            lblPlayer1.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // lblBots
             // 
@@ -304,9 +305,9 @@
             chkBot1.ForeColor = Color.Aqua;
             chkBot1.Location = new Point(3, 7);
             chkBot1.Name = "chkBot1";
-            chkBot1.Size = new Size(174, 36);
+            chkBot1.Size = new Size(87, 36);
             chkBot1.TabIndex = 0;
-            chkBot1.Text = "Bot 1 (Dumb)";
+            chkBot1.Text = "Bot 1";
             chkBot1.UseVisualStyleBackColor = true;
             // 
             // chkBot2
@@ -320,9 +321,9 @@
             chkBot2.ForeColor = Color.Aqua;
             chkBot2.Location = new Point(190, 7);
             chkBot2.Name = "chkBot2";
-            chkBot2.Size = new Size(170, 36);
+            chkBot2.Size = new Size(94, 36);
             chkBot2.TabIndex = 1;
-            chkBot2.Text = "Bot 2 (Smart)";
+            chkBot2.Text = "Bot 2 ";
             chkBot2.UseVisualStyleBackColor = true;
             // 
             // btnDifficulty
@@ -368,30 +369,46 @@
             tableLayoutPanel1.ColumnCount = 2;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.Controls.Add(button1, 0, 0);
+            tableLayoutPanel1.Controls.Add(btnBack, 0, 0);
             tableLayoutPanel1.Controls.Add(btnStart, 1, 0);
             tableLayoutPanel1.Location = new Point(512, 507);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel1.Size = new Size(505, 71);
             tableLayoutPanel1.TabIndex = 8;
             // 
-            // button1
+            // btnBack
             // 
-            button1.BackColor = Color.FromArgb(15, 15, 15);
-            button1.Dock = DockStyle.Fill;
-            button1.FlatStyle = FlatStyle.Flat;
-            button1.Font = new Font("Segoe UI Semibold", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button1.ForeColor = Color.Red;
-            button1.Location = new Point(3, 2);
-            button1.Margin = new Padding(3, 2, 3, 2);
-            button1.Name = "button1";
-            button1.Size = new Size(246, 67);
-            button1.TabIndex = 2;
-            button1.Text = "Back";
-            button1.UseVisualStyleBackColor = false;
-            button1.Click += button1_Click_1;
+            btnBack.BackColor = Color.FromArgb(15, 15, 15);
+            btnBack.Dock = DockStyle.Fill;
+            btnBack.FlatStyle = FlatStyle.Flat;
+            btnBack.Font = new Font("Segoe UI Semibold", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnBack.ForeColor = Color.Red;
+            btnBack.Location = new Point(3, 2);
+            btnBack.Margin = new Padding(3, 2, 3, 2);
+            btnBack.Name = "btnBack";
+            btnBack.Size = new Size(246, 67);
+            btnBack.TabIndex = 2;
+            btnBack.Text = "Back";
+            btnBack.UseVisualStyleBackColor = false;
+            btnBack.Click += button1_Click_1;
+            // 
+            // BtnReset
+            // 
+            BtnReset.BackColor = Color.FromArgb(15, 15, 15);
+            BtnReset.FlatStyle = FlatStyle.Flat;
+            BtnReset.Font = new Font("Segoe UI Semibold", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            BtnReset.ForeColor = Color.LimeGreen;
+            BtnReset.Location = new Point(808, 345);
+            BtnReset.Margin = new Padding(3, 2, 3, 2);
+            BtnReset.Name = "BtnReset";
+            BtnReset.Size = new Size(203, 59);
+            BtnReset.TabIndex = 9;
+            BtnReset.Text = "Reset";
+            BtnReset.UseVisualStyleBackColor = false;
+            BtnReset.Click += BtnReset_Click;
             // 
             // SinglePlayer
             // 
@@ -399,6 +416,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(15, 15, 15);
             ClientSize = new Size(1020, 581);
+            Controls.Add(BtnReset);
             Controls.Add(tableLayoutPanel1);
             Controls.Add(pnlTitleBackground);
             Controls.Add(pnlCanvasBG);
@@ -438,10 +456,9 @@
         private Panel pnlCanvasBG;
         private TableLayoutPanel tLPGameStats;
         private Label lblScore;
-        private Label label2;
+        private Label lblScore2;
         private Label label3;
         private TableLayoutPanel tLPSettings;
-        private Label lblPlayer1;
         private Panel pnlSettingsBG;
         private Label lblBots;
         private TextBox txtName1;
@@ -453,6 +470,8 @@
         private Label lblMSG;
         private Button btnSpawn;
         private TableLayoutPanel tableLayoutPanel1;
-        private Button button1;
+        private Button btnBack;
+        private Label lblPlayer1;
+        private Button BtnReset;
     }
 }

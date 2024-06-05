@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
+using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace QuantumSerpent
 {
-    class Player
+    public class Player
     {
+
         private readonly List<Position> items = [];
         Directions direction;
-        private Player(int x, int y, Directions initialDirection, int initialLength = 3)
+        protected Player(int x, int y, Directions initialDirection, int initialLength = 3)
         {
             if (initialLength < 1)
             {
@@ -25,10 +27,17 @@ namespace QuantumSerpent
             direction = initialDirection;
         }
 
+        
 
-        public void HandleKey(Keys keycode)
+
+        virtual public bool HandleKey(Keys keycode)
         {
-            if(keycode == UpKey)
+            Directions oldDir = PlayerDirection;
+            if (!CanMove)
+            {
+                return false;
+            }
+            if (keycode == UpKey)
             {
                 PlayerDirection = Directions.Up;
             }
@@ -44,8 +53,16 @@ namespace QuantumSerpent
             {
                 PlayerDirection = Directions.Right;
             }
+            if(PlayerDirection != oldDir)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
-        public void Move(Directions direction)
+        virtual public void Move(Directions direction)
         {
             if (HasMoved)
             {
@@ -92,6 +109,7 @@ namespace QuantumSerpent
         public int Y => items[0].Y;
         public string Name { get; set; } = "";
         public bool HasMoved { get; set; } = false;
+        public bool CanMove { get; set; } = true;
         public Keys UpKey { get; set; } = Keys.Up;
         public Keys DownKey { get; set; } = Keys.Down;
         public Keys LeftKey { get; set; } = Keys.Left;
@@ -106,27 +124,30 @@ namespace QuantumSerpent
         public static Player Create(int maxWidth, int maxHeight, string name)
         {
             instanceCount++;
-            int x = 0;
-            int y = 0;
-            Directions direction = Directions.Left;
-            switch(instanceCount)
+            int x;
+            int y;
+            Directions direction;
+            switch (instanceCount)
             {
                 case 1:
                     x = 2;
                     y = maxHeight - 2;
                     direction = Directions.Up;
-                    return new Player(x, y, direction);
+                    return new Player(x, y, direction)
+                    {
+                        Name = name == "" ? "Player 1" : name,
+                    };
                 case 2:
                     x = maxWidth - 2;
                     y = 2;
-                    direction = Directions.Left;
+                    direction = Directions.Down;
                     return new Player(x, y, direction)
                     {
                         UpKey = Keys.W,
                         DownKey = Keys.S,
                         LeftKey = Keys.A,
                         RightKey = Keys.D,
-                        Name = name,
+                        Name = name == "" ? "Player 2" : name,
                         BodyColor = Brushes.Blue,
                         HeadColor = Brushes.Red
                     };
@@ -138,7 +159,7 @@ namespace QuantumSerpent
         public void Eat(Food food)
         {
             for(int i = 0; i < food.Energy; i++)
-            items.Add(new Position(X,Y));
+            items.Add(new Position(-1,-1));
         }
     }
 }

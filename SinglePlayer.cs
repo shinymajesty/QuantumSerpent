@@ -7,11 +7,11 @@ namespace QuantumSerpent
         private MainMenu mainMenu;
         readonly Random rnd = new();
         readonly static List<Player> playerList = [];
+        readonly static List<Label> labelList = [];
         readonly List<Food> foodList = [];
         GameState gameState = GameState.Paused;
         int MaxHeight => canvas.Height / GameSettings.Size;
         int MaxWidth => canvas.Width / GameSettings.Size;
-
         public Random Rnd => rnd;
 
         public SinglePlayer(MainMenu formCreator)
@@ -21,6 +21,7 @@ namespace QuantumSerpent
         }
         private void GameTimer_Tick(object sender, EventArgs e)
         {
+
             // Game loop
             foreach (var player in playerList)
             {
@@ -30,13 +31,24 @@ namespace QuantumSerpent
                 }
                 player.Move(player.PlayerDirection);
                 player.HasMoved = false;
+                player.CanMove = true;
             }
+
             ValidatePlayerPosition();
+            if (playerList.Count == 1)
+            {
+                lblScore.Text = $"Player 1: {playerList[0].Score}";
+            }
+            if (playerList.Count == 2)
+            {
+                lblScore.Text = $"Player 1: {playerList[0].Score}";
+                lblScore2.Text = $"Player 2: {playerList[1].Score}";
+            }
+
             canvas.Controls.Clear();
             canvas.Invalidate(); // Force redraw
 
         }
-
         private void CreateFood()
         {
             int x;
@@ -73,8 +85,14 @@ namespace QuantumSerpent
                 }
             } while (!success);
 
-            foodList.Add(new Food(x, y));
-
+            if (rnd.Next(0, 100) < 50)
+            {
+                foodList.Add(new Pepper(new Position(x, y)));
+            }
+            else
+            {
+                foodList.Add(new Food(new Position(x, y)));
+            }
         }
         private void ValidatePlayerPosition()
         {
@@ -112,19 +130,37 @@ namespace QuantumSerpent
                 }
 
                 //Check if player has collided with food
-                foreach (var food in foodList)
+                for (int i = foodList.Count - 1; i >= 0; i--)
                 {
-                    var newPos = new Position(player1.X, player1.Y);
-                    if (newPos == food.Position)
+                    var food = foodList[i];
+                    foreach (var item in playerList)
                     {
-                        player1.Eat(food);
-                        foodList.Remove(food);
-                        CreateFood();
-                        break; //not possible that there is more than one food at the same position
+                        if (item == null) continue;
+                        // Check if player has collided with food
+                        var newPos = new Position(item.X, item.Y);
+                        if (newPos == food.Position)
+                        {
+                            item.Eat(food);
+                            foodList.Remove(food);
+                            if (foodList.Count == 0)
+                                CreateFood();
+                            break; // not possible that there is more than one food at the same position
+                        }
                     }
                 }
             }
 
+            for (int i = 0; i < playerList.Count; i++)
+            {
+                var player = playerList[i];
+                if (player == null) continue;
+                if (player.State == PlayerState.Dead)
+                {
+                    playerList.RemoveAt(i);
+                    i--; // Decrement i to account for the removed element
+                         // Optionally, if you only want to remove one dead player, you can break here
+                }
+            }
         }
         private void BtnStart_Click(object sender, EventArgs e)
         {
@@ -136,19 +172,49 @@ namespace QuantumSerpent
             chkBot2.Enabled = false;
             btnDifficulty.Enabled = false;
             btnSpawn.Enabled = false;
+            btnBack.Enabled = false;
+            BtnReset.Enabled = false;
 
             gameTimer.Interval = GameSettings.Difficulty switch
             {
                 Difficulty.Easy => 200,
                 Difficulty.Medium => 100,
-                Difficulty.Hard => 50,
+                Difficulty.Hard => 15,
                 _ => 200
             };
+
+            if (playerList.Count == 0 && !(GameSettings.Bot1 || GameSettings.Bot2))
+            {
+                MessageBox.Show("You need to add at least one player to start the game!");
+                return;
+            }
+            if (GameSettings.Bot1)
+            {
+                AIPlayer bot = new(2, 2, Directions.Right, 3, GetWorldInfo)
+                {
+                    Name = "Bot 1",
+                };
+                playerList.Add(bot);
+            }
+            if (GameSettings.Bot2)
+            {
+                AIPlayer bot = new(MaxWidth - 2, MaxHeight - 2, Directions.Left, 3, GetWorldInfo)
+                {
+                    Name = "Bot 2",
+                };
+                playerList.Add(bot);
+            }
             gameTimer.Enabled = true;
             btnStart.Enabled = false;
+            btnStart.Text = "Reset";
             gameState = GameState.Running;
             this.Focus();
             CreateFood();
+        }
+
+        private void BtnReset_Click(object sender, EventArgs e)
+        {
+            Application.Restart();
         }
         private void Canvas_Paint(object sender, PaintEventArgs e)
         {
@@ -157,11 +223,10 @@ namespace QuantumSerpent
             using var offScreenBitmap = new Bitmap(canvas.Width, canvas.Height);
             using var offScreenGraphics = Graphics.FromImage(offScreenBitmap);
             // Draw the player
-            if (gameState == GameState.Running)
+            if (gameState != GameState.GameOver)
             {
                 foreach (Player player in playerList)
                 {
-                    if (player == null) continue;
                     if (player.State == PlayerState.Alive)
                     {
                         foreach (Position item in player.Items)
@@ -198,8 +263,10 @@ namespace QuantumSerpent
             }
             // Draw the food
             foreach (Food food in foodList)
-                offScreenGraphics.FillRectangle(Brushes.Red, food.Position.X * scale, food.Position.Y * scale, scale, scale);
-
+            {
+                Brush brush = food is Pepper ? Brushes.Red : Brushes.Green;
+                offScreenGraphics.FillRectangle(brush, food.Position.X * scale, food.Position.Y * scale, scale, scale);
+            }
             // Draw the off-screen bitmap to the screen
             e.Graphics.DrawImage(offScreenBitmap, 0, 0);
         }
@@ -211,7 +278,13 @@ namespace QuantumSerpent
             }
             foreach (var player in playerList)
             {
-                player?.HandleKey(e.KeyCode);
+                if (player.CanMove)
+                {
+                    if(player.HandleKey(e.KeyCode))
+                    {
+                        player.CanMove = false;
+                    }
+                }
             }
 
         }
@@ -259,36 +332,60 @@ namespace QuantumSerpent
             }
             if (allDead)
             {
-
+                gameState = GameState.GameOver;
+                gameTimer.Enabled = false;
+                lblMSG.Visible = true;
+                lblMSG.Text = "Game Over!";
+                BtnReset.Enabled = true;
             }
         }
-
-
-
         private void Button1_Click(object sender, EventArgs e)
         {
             //Factory -> Spawns Players
             try
             {
-                playerList.Add(Player.Create(MaxWidth, MaxHeight, "Name1"));
+                Player player = Player.Create(MaxWidth, MaxHeight, txtName1.Text);
+                playerList.Add(player);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return;
             }
-        }
+            txtName1.Text = "";
 
+            canvas.Invalidate();
+        }
         private void button1_Click_1(object sender, EventArgs e)
         {
             mainMenu.Show();
             this.Hide();
             this.Close();
         }
-
         private void SinglePlayer_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if(this.Visible == false) return;
+            if (this.Visible == false) return;
             mainMenu.Close();
         }
+        public ((IEnumerable<Position>, IEnumerable<Food>), (int, int)) GetWorldInfo()
+        {
+            List<Position> avoid = [];
+            List<Food> food = [];
+            foreach (var player in playerList)
+            {
+                if (player == null) continue;
+                foreach (var item in player.Items)
+                {
+                    avoid.Add(item);
+                }
+            }
+            foreach (var item in foodList)
+            {
+                food.Add(item);
+            }
+            return ((avoid, food), (MaxWidth, MaxHeight));
+        }
+       
+       
     }
 }

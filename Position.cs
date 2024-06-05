@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace QuantumSerpent
 {
-    class Position (int x, int y)
+    public class Position (int x, int y)
     {
         public int X { get; set; } = x;
 
@@ -16,5 +16,17 @@ namespace QuantumSerpent
             return a.X == b.X && a.Y == b.Y;
         }
         public static bool operator !=(Position a, Position b) => !(a == b);
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(X, Y);
+        }
+        public override bool Equals(object? obj)
+        {
+            if (obj is Position otherPosition)
+            {
+                return X == otherPosition.X && Y == otherPosition.Y;
+            }
+            return false;
+        }
     }
 }
