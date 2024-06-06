@@ -161,5 +161,10 @@ namespace QuantumSerpent
             for(int i = 0; i < food.Energy; i++)
             items.Add(new Position(-1,-1));
         }
+        public static void Reset()
+        {
+            instanceCount = 0;
+        }
+
     }
 }

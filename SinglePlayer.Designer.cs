@@ -38,9 +38,6 @@
             pnlCanvasBG = new Panel();
             lblMSG = new Label();
             tLPGameStats = new TableLayoutPanel();
-            lblScore = new Label();
-            lblScore2 = new Label();
-            label3 = new Label();
             tLPSettings = new TableLayoutPanel();
             lblPlayer1 = new Label();
             lblDifficulty = new Label();
@@ -55,10 +52,10 @@
             tableLayoutPanel1 = new TableLayoutPanel();
             btnBack = new Button();
             BtnReset = new Button();
+            panel1 = new Panel();
             ((System.ComponentModel.ISupportInitialize)canvas).BeginInit();
             pnlTitleBackground.SuspendLayout();
             pnlCanvasBG.SuspendLayout();
-            tLPGameStats.SuspendLayout();
             tLPSettings.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
             pnlSettingsBG.SuspendLayout();
@@ -155,9 +152,6 @@
             tLPGameStats.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
             tLPGameStats.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
             tLPGameStats.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
-            tLPGameStats.Controls.Add(lblScore, 0, 0);
-            tLPGameStats.Controls.Add(lblScore2, 1, 0);
-            tLPGameStats.Controls.Add(label3, 2, 0);
             tLPGameStats.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
             tLPGameStats.Location = new Point(3, 507);
             tLPGameStats.Name = "tLPGameStats";
@@ -165,45 +159,6 @@
             tLPGameStats.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tLPGameStats.Size = new Size(500, 71);
             tLPGameStats.TabIndex = 1;
-            // 
-            // lblScore
-            // 
-            lblScore.AutoSize = true;
-            lblScore.Dock = DockStyle.Fill;
-            lblScore.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblScore.ForeColor = Color.LimeGreen;
-            lblScore.Location = new Point(3, 0);
-            lblScore.Name = "lblScore";
-            lblScore.Size = new Size(160, 71);
-            lblScore.TabIndex = 0;
-            lblScore.Text = "Player 1:";
-            lblScore.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // lblScore2
-            // 
-            lblScore2.AutoSize = true;
-            lblScore2.Dock = DockStyle.Fill;
-            lblScore2.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold);
-            lblScore2.ForeColor = Color.LimeGreen;
-            lblScore2.Location = new Point(169, 0);
-            lblScore2.Name = "lblScore2";
-            lblScore2.Size = new Size(160, 71);
-            lblScore2.TabIndex = 1;
-            lblScore2.Text = "Player 2:";
-            lblScore2.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Dock = DockStyle.Fill;
-            label3.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold);
-            label3.ForeColor = Color.LimeGreen;
-            label3.Location = new Point(335, 0);
-            label3.Name = "label3";
-            label3.Size = new Size(162, 71);
-            label3.TabIndex = 2;
-            label3.Text = "Speed:";
-            label3.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // tLPSettings
             // 
@@ -410,12 +365,20 @@
             BtnReset.UseVisualStyleBackColor = false;
             BtnReset.Click += BtnReset_Click;
             // 
+            // panel1
+            // 
+            panel1.Location = new Point(512, 346);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(249, 155);
+            panel1.TabIndex = 10;
+            // 
             // SinglePlayer
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(15, 15, 15);
             ClientSize = new Size(1020, 581);
+            Controls.Add(panel1);
             Controls.Add(BtnReset);
             Controls.Add(tableLayoutPanel1);
             Controls.Add(pnlTitleBackground);
@@ -432,8 +395,6 @@
             ((System.ComponentModel.ISupportInitialize)canvas).EndInit();
             pnlTitleBackground.ResumeLayout(false);
             pnlCanvasBG.ResumeLayout(false);
-            tLPGameStats.ResumeLayout(false);
-            tLPGameStats.PerformLayout();
             tLPSettings.ResumeLayout(false);
             tLPSettings.PerformLayout();
             tableLayoutPanel3.ResumeLayout(false);
@@ -455,9 +416,6 @@
         private Label lblTitle;
         private Panel pnlCanvasBG;
         private TableLayoutPanel tLPGameStats;
-        private Label lblScore;
-        private Label lblScore2;
-        private Label label3;
         private TableLayoutPanel tLPSettings;
         private Panel pnlSettingsBG;
         private Label lblBots;
@@ -473,5 +431,6 @@
         private Button btnBack;
         private Label lblPlayer1;
         private Button BtnReset;
+        private Panel panel1;
     }
 }

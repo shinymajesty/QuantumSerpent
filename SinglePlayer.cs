@@ -167,14 +167,6 @@ namespace QuantumSerpent
             GameSettings.Bot1 = chkBot1.Checked;
             GameSettings.Bot2 = chkBot2.Checked;
 
-            txtName1.Enabled = false;
-            chkBot1.Enabled = false;
-            chkBot2.Enabled = false;
-            btnDifficulty.Enabled = false;
-            btnSpawn.Enabled = false;
-            btnBack.Enabled = false;
-            BtnReset.Enabled = false;
-
             gameTimer.Interval = GameSettings.Difficulty switch
             {
                 Difficulty.Easy => 200,
@@ -204,9 +196,18 @@ namespace QuantumSerpent
                 };
                 playerList.Add(bot);
             }
+
+            txtName1.Enabled = false;
+            chkBot1.Enabled = false;
+            chkBot2.Enabled = false;
+            btnDifficulty.Enabled = false;
+            btnSpawn.Enabled = false;
+            btnBack.Enabled = false;
+            BtnReset.Enabled = false;
+
+
             gameTimer.Enabled = true;
             btnStart.Enabled = false;
-            btnStart.Text = "Reset";
             gameState = GameState.Running;
             this.Focus();
             CreateFood();
@@ -214,7 +215,32 @@ namespace QuantumSerpent
 
         private void BtnReset_Click(object sender, EventArgs e)
         {
-            Application.Restart();
+            MessageBox.Show("Game Reset! (Player count: " + playerList.Count + ")");
+
+            // Reset all parameters
+            playerList.Clear();
+            foodList.Clear();
+            gameState = GameState.Paused;
+            lblMSG.Visible = false;
+            Player.Reset();
+
+            // Reset choices
+            txtName1.Enabled = true;
+            chkBot1.Enabled = true;
+            chkBot2.Enabled = true;
+            btnDifficulty.Enabled = true;
+            btnSpawn.Enabled = true;
+            btnBack.Enabled = true;
+            BtnReset.Enabled = true;
+            btnStart.Enabled = true;
+
+            // Clear labels
+            lblScore.Text = "";
+            lblScore2.Text = "";
+
+            // Clear canvas
+            canvas.Controls.Clear();
+            canvas.Invalidate();
         }
         private void Canvas_Paint(object sender, PaintEventArgs e)
         {
@@ -280,7 +306,7 @@ namespace QuantumSerpent
             {
                 if (player.CanMove)
                 {
-                    if(player.HandleKey(e.KeyCode))
+                    if (player.HandleKey(e.KeyCode))
                     {
                         player.CanMove = false;
                     }
@@ -385,7 +411,7 @@ namespace QuantumSerpent
             }
             return ((avoid, food), (MaxWidth, MaxHeight));
         }
-       
+
        
     }
 }
