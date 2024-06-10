@@ -52,6 +52,7 @@
             tableLayoutPanel1 = new TableLayoutPanel();
             btnBack = new Button();
             BtnReset = new Button();
+            scoreboardTBL = new TableLayoutPanel();
             panel1 = new Panel();
             ((System.ComponentModel.ISupportInitialize)canvas).BeginInit();
             pnlTitleBackground.SuspendLayout();
@@ -60,6 +61,7 @@
             tableLayoutPanel3.SuspendLayout();
             pnlSettingsBG.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // canvas
@@ -307,7 +309,7 @@
             btnSpawn.TabIndex = 8;
             btnSpawn.Text = "Add Player";
             btnSpawn.UseVisualStyleBackColor = true;
-            btnSpawn.Click += Button1_Click;
+            btnSpawn.Click += BtnAddPlayer_Click;
             // 
             // pnlSettingsBG
             // 
@@ -348,7 +350,7 @@
             btnBack.TabIndex = 2;
             btnBack.Text = "Back";
             btnBack.UseVisualStyleBackColor = false;
-            btnBack.Click += button1_Click_1;
+            btnBack.Click += BtnBack_Click;
             // 
             // BtnReset
             // 
@@ -365,12 +367,28 @@
             BtnReset.UseVisualStyleBackColor = false;
             BtnReset.Click += BtnReset_Click;
             // 
+            // scoreboardTBL
+            // 
+            scoreboardTBL.BackColor = Color.FromArgb(15, 15, 15);
+            scoreboardTBL.ColumnCount = 2;
+            scoreboardTBL.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 75F));
+            scoreboardTBL.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            scoreboardTBL.Dock = DockStyle.Fill;
+            scoreboardTBL.Location = new Point(0, 0);
+            scoreboardTBL.Name = "scoreboardTBL";
+            scoreboardTBL.RowCount = 1;
+            scoreboardTBL.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            scoreboardTBL.Size = new Size(200, 100);
+            scoreboardTBL.TabIndex = 10;
+            // 
             // panel1
             // 
-            panel1.Location = new Point(512, 346);
+            panel1.BackColor = Color.Aqua;
+            panel1.Controls.Add(scoreboardTBL);
+            panel1.Location = new Point(515, 345);
             panel1.Name = "panel1";
-            panel1.Size = new Size(249, 155);
-            panel1.TabIndex = 10;
+            panel1.Size = new Size(200, 100);
+            panel1.TabIndex = 11;
             // 
             // SinglePlayer
             // 
@@ -401,6 +419,7 @@
             tableLayoutPanel3.PerformLayout();
             pnlSettingsBG.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
+            panel1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -431,6 +450,7 @@
         private Button btnBack;
         private Label lblPlayer1;
         private Button BtnReset;
+        private TableLayoutPanel scoreboardTBL;
         private Panel panel1;
     }
 }

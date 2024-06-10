@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Windows.Forms;
 
 namespace QuantumSerpent
 {
@@ -13,7 +14,6 @@ namespace QuantumSerpent
         int MaxHeight => canvas.Height / GameSettings.Size;
         int MaxWidth => canvas.Width / GameSettings.Size;
         public Random Rnd => rnd;
-
         public SinglePlayer(MainMenu formCreator)
         {
             InitializeComponent();
@@ -35,19 +35,11 @@ namespace QuantumSerpent
             }
 
             ValidatePlayerPosition();
-            if (playerList.Count == 1)
-            {
-                lblScore.Text = $"Player 1: {playerList[0].Score}";
-            }
-            if (playerList.Count == 2)
-            {
-                lblScore.Text = $"Player 1: {playerList[0].Score}";
-                lblScore2.Text = $"Player 2: {playerList[1].Score}";
-            }
-
+            
+            gameTimer.Interval = (int)CalculateInterval();
             canvas.Controls.Clear();
             canvas.Invalidate(); // Force redraw
-
+            RedrawScoreboard();
         }
         private void CreateFood()
         {
@@ -212,10 +204,8 @@ namespace QuantumSerpent
             this.Focus();
             CreateFood();
         }
-
         private void BtnReset_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Game Reset! (Player count: " + playerList.Count + ")");
 
             // Reset all parameters
             playerList.Clear();
@@ -234,9 +224,7 @@ namespace QuantumSerpent
             BtnReset.Enabled = true;
             btnStart.Enabled = true;
 
-            // Clear labels
-            lblScore.Text = "";
-            lblScore2.Text = "";
+            
 
             // Clear canvas
             canvas.Controls.Clear();
@@ -365,13 +353,14 @@ namespace QuantumSerpent
                 BtnReset.Enabled = true;
             }
         }
-        private void Button1_Click(object sender, EventArgs e)
+        private void BtnAddPlayer_Click(object sender, EventArgs e)
         {
             //Factory -> Spawns Players
             try
             {
                 Player player = Player.Create(MaxWidth, MaxHeight, txtName1.Text);
                 playerList.Add(player);
+                RedrawScoreboard();
             }
             catch (Exception ex)
             {
@@ -382,7 +371,7 @@ namespace QuantumSerpent
 
             canvas.Invalidate();
         }
-        private void button1_Click_1(object sender, EventArgs e)
+        private void BtnBack_Click(object sender, EventArgs e)
         {
             mainMenu.Show();
             this.Hide();
@@ -411,7 +400,49 @@ namespace QuantumSerpent
             }
             return ((avoid, food), (MaxWidth, MaxHeight));
         }
+        private void RedrawScoreboard()
+        {
+            scoreboardTBL.Controls.Clear();
+            scoreboardTBL.RowStyles.Clear();
+            scoreboardTBL.RowCount = 0;
 
+            scoreboardTBL.RowCount = playerList.Count;
+            for (int i = 0; i < playerList.Count; i++)
+            {
+                var p = playerList[i];
+                if (p == null) continue;
+                scoreboardTBL.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+                Label lblName = new()
+                {
+                    Text = p.Name,
+                    AutoSize = true,
+                    Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                    ForeColor = ((SolidBrush)p.HeadColor).Color,
+                    TextAlign = ContentAlignment.MiddleCenter
+                };
+                Label lblScore = new()
+                {
+                    Text = p.Score.ToString(),
+                    AutoSize = true,
+                    Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                    ForeColor = ((SolidBrush)p.HeadColor).Color,
+                    TextAlign = ContentAlignment.MiddleCenter
+                };
+                scoreboardTBL.Controls.Add(lblScore, 1, i);
+                scoreboardTBL.Controls.Add(lblName, 0, i);
+
+            }
+        }
+        private static double CalculateInterval()
+        {
+            return GameSettings.Difficulty switch
+            {
+                Difficulty.Easy => 200,
+                Difficulty.Medium => 100,
+                Difficulty.Hard => 15,
+                _ => 200
+            } / (((4) / ((1 + (Math.Pow(Math.E, -0.01 * (playerList.Sum(player => player.Score) - (3 * playerList.Count))))))) - 1.2);
+        }  
        
     }
 }
