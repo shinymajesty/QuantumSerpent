@@ -44,7 +44,7 @@ namespace QuantumSerpent
         }
 
         private void btnMultiplayer_Click(object sender, EventArgs e)
-        { 
+        {
             multiplayer = new Multiplayer();
             multiplayer.Show();
             HideMainMenu();
@@ -61,19 +61,24 @@ namespace QuantumSerpent
 
         private void MainMenu_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if(this.Visible == false)
+            if (this.Visible == false)
             {
                 //Application.Exit();
                 return;
             }
-            if(singlePlayer != null)
+            if (singlePlayer != null)
             {
                 singlePlayer.Close();
             }
-            if(multiplayer != null)
+            if (multiplayer != null)
             {
                 multiplayer.Close();
             }
+        }
+
+        private void MainMenu_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
