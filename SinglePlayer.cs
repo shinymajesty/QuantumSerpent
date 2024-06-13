@@ -336,6 +336,7 @@ namespace QuantumSerpent
             canvas.Invalidate();
             player.State = PlayerState.Dead;
             bool allDead = true;
+
             foreach (var item in playerList)
             {
                 if (item.State == PlayerState.Alive)
@@ -344,6 +345,7 @@ namespace QuantumSerpent
                     break;
                 }
             }
+
             if (allDead)
             {
                 gameState = GameState.GameOver;
@@ -351,8 +353,13 @@ namespace QuantumSerpent
                 lblMSG.Visible = true;
                 lblMSG.Text = "Game Over!";
                 BtnReset.Enabled = true;
+
+                // Show the high score menu
+                ShowHighScoreMenu(player);
             }
         }
+
+
         private void BtnAddPlayer_Click(object sender, EventArgs e)
         {
             //Factory -> Spawns Players
@@ -442,7 +449,50 @@ namespace QuantumSerpent
                 Difficulty.Hard => 15,
                 _ => 200
             } / (((4) / ((1 + (Math.Pow(Math.E, -0.01 * (playerList.Sum(player => player.Score) - (3 * playerList.Count))))))) - 1.2);
-        }  
-       
+        }
+        private void ShowHighScoreMenu(Player player)
+        {
+            if(player is AIPlayer)
+            {
+                return;
+            }
+
+
+
+            // Create the high score entry
+            HighScore newScore = new HighScore(player.Name, player.Score);
+
+            // Retrieve all existing high scores
+            FileDAO fileDAO = new FileDAO("highscores.txt");
+            List<HighScore> existingHighScores = fileDAO.GetAllHighScores();
+
+            // Check if the new score is a high score
+            bool isNewHighScore = IsNewHighScore(existingHighScores, newScore);
+
+            if (isNewHighScore)
+            {
+                // Show high score menu only if it's a new high score
+                HighScoreMenu highScoreMenu = new HighScoreMenu(newScore);
+                highScoreMenu.ShowDialog();
+            }
+        }
+
+        private bool IsNewHighScore(List<HighScore> existingHighScores, HighScore newScore)
+        {
+            // Check if the new score is higher than any existing score for the same player
+            foreach (var score in existingHighScores)
+            {
+                if (score.PlayerName == newScore.PlayerName && newScore.Score > score.Score)
+                {
+                    return true;
+                }
+            }
+
+            // If no existing score for the player or new score is not higher, return false
+            return existingHighScores.All(score => score.PlayerName != newScore.PlayerName);
+        }
+
+
+
     }
 }
