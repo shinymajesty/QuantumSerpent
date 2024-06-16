@@ -45,7 +45,7 @@ namespace QuantumSerpent
 
         private void btnMultiplayer_Click(object sender, EventArgs e)
         {
-            multiplayer = new Multiplayer();
+            multiplayer = new Multiplayer(this);
             multiplayer.Show();
             HideMainMenu();
         }
@@ -78,7 +78,7 @@ namespace QuantumSerpent
 
         private void MainMenu_Load(object sender, EventArgs e)
         {
-
+            this.Show();
         }
     }
 }

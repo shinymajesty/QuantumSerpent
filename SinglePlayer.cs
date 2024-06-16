@@ -358,8 +358,6 @@ namespace QuantumSerpent
                 ShowHighScoreMenu(player);
             }
         }
-
-
         private void BtnAddPlayer_Click(object sender, EventArgs e)
         {
             //Factory -> Spawns Players
@@ -381,13 +379,11 @@ namespace QuantumSerpent
         private void BtnBack_Click(object sender, EventArgs e)
         {
             mainMenu.Show();
-            this.Hide();
             this.Close();
         }
         private void SinglePlayer_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.Visible == false) return;
-            mainMenu.Close();
+            if (mainMenu.Visible == false) mainMenu.Close();
         }
         public ((IEnumerable<Position>, IEnumerable<Food>), (int, int)) GetWorldInfo()
         {
@@ -476,7 +472,6 @@ namespace QuantumSerpent
                 highScoreMenu.ShowDialog();
             }
         }
-
         private bool IsNewHighScore(List<HighScore> existingHighScores, HighScore newScore)
         {
             // Check if the new score is higher than any existing score for the same player
