@@ -6,14 +6,11 @@ namespace QuantumSerpent
     public partial class SinglePlayer : Form
     {
         private MainMenu mainMenu;
-        readonly Random rnd = new();
-        readonly static List<Player> playerList = [];
-        readonly static List<Label> labelList = [];
-        readonly List<Food> foodList = [];
+        static List<Player> playerList = [];
+        List<Food> foodList = [];
         GameState gameState = GameState.Paused;
         int MaxHeight => canvas.Height / GameSettings.Size;
         int MaxWidth => canvas.Width / GameSettings.Size;
-        public Random Rnd => rnd;
         public SinglePlayer(MainMenu formCreator)
         {
             InitializeComponent();
@@ -21,7 +18,10 @@ namespace QuantumSerpent
         }
         private void GameTimer_Tick(object sender, EventArgs e)
         {
-
+            if(gameState != GameState.Running)
+            {
+                return;
+            }
             // Game loop
             foreach (var player in playerList)
             {
@@ -34,130 +34,33 @@ namespace QuantumSerpent
                 player.CanMove = true;
             }
 
-            ValidatePlayerPosition();
+            GameEngine.CheckCollision(playerList, foodList, MaxWidth, MaxHeight, GameOverFunction);
             
-            gameTimer.Interval = (int)CalculateInterval();
+            
+
+            gameTimer.Interval = (int)GameEngine.CalculateInterval(playerList);
             canvas.Controls.Clear();
             canvas.Invalidate(); // Force redraw
             RedrawScoreboard();
         }
-        private void CreateFood()
+
+        private void GameOverFunction(Player player)
         {
-            int x;
-            int y;
-            bool success;
-            do
-            {
-                x = Rnd.Next(0, MaxWidth);
-                y = Rnd.Next(0, MaxHeight);
-                //Check if the food is not on a player
-                success = true;
+            gameState = GameState.GameOver;
+            lblMSG.Visible = true;
+            lblMSG.Text = $"{player.Name} has lost!";
+            ShowHighScoreMenu(player);
+            SwitchControls();
 
-                foreach (var player in playerList)
-                {
-                    if (player == null) continue;
-                    foreach (var item in player.Items)
-                    {
-                        var newPos = new Position(x, y);
-                        if (newPos == item)
-                        {
-                            success = false;
-                            break;
-                        }
-                    }
-                }
-                foreach (var food in foodList)
-                {
-                    var newPos = new Position(x, y);
-                    if (newPos == food.Position)
-                    {
-                        success = false;
-                        break;
-                    }
-                }
-            } while (!success);
-
-            if (rnd.Next(0, 100) < 50)
-            {
-                foodList.Add(new Pepper(new Position(x, y)));
-            }
-            else
-            {
-                foodList.Add(new Food(new Position(x, y)));
-            }
         }
-        private void ValidatePlayerPosition()
-        {
-            foreach (Player player1 in playerList)
-            {
-                if (player1 == null) continue;
-                //Check border collision
-                if (player1.X < 0 || player1.X >= MaxWidth || player1.Y < 0 || player1.Y >= MaxHeight)
-                {
-                    PlayerDied(player1);
-                }
-                //Check if player has collided with itself
-                foreach (var item in player1.Items.Skip(1))
-                {
-                    if (player1.X == item.X && player1.Y == item.Y)
-                    {
-                        PlayerDied(player1);
-                    }
-                }
-                //Check if player has collided with another player
-                foreach (var player2 in playerList)
-                {
-                    if (player2 == null) continue;
-                    if (player1 == player2)
-                    {
-                        continue;
-                    }
-                    foreach (var item in player2.Items)
-                    {
-                        if (player1.X == item.X && player1.Y == item.Y)
-                        {
-                            PlayerDied(player1);
-                        }
-                    }
-                }
 
-                //Check if player has collided with food
-                for (int i = foodList.Count - 1; i >= 0; i--)
-                {
-                    var food = foodList[i];
-                    foreach (var item in playerList)
-                    {
-                        if (item == null) continue;
-                        // Check if player has collided with food
-                        var newPos = new Position(item.X, item.Y);
-                        if (newPos == food.Position)
-                        {
-                            item.Eat(food);
-                            foodList.Remove(food);
-                            if (foodList.Count == 0)
-                                CreateFood();
-                            break; // not possible that there is more than one food at the same position
-                        }
-                    }
-                }
-            }
-
-            for (int i = 0; i < playerList.Count; i++)
-            {
-                var player = playerList[i];
-                if (player == null) continue;
-                if (player.State == PlayerState.Dead)
-                {
-                    playerList.RemoveAt(i);
-                    i--; // Decrement i to account for the removed element
-                         // Optionally, if you only want to remove one dead player, you can break here
-                }
-            }
-        }
         private void BtnStart_Click(object sender, EventArgs e)
         {
             GameSettings.Bot1 = chkBot1.Checked;
             GameSettings.Bot2 = chkBot2.Checked;
+            foodList = [];
+            lblMSG.Visible = false;
+            Player.Reset();
 
             gameTimer.Interval = GameSettings.Difficulty switch
             {
@@ -189,20 +92,24 @@ namespace QuantumSerpent
                 playerList.Add(bot);
             }
 
-            txtName1.Enabled = false;
-            chkBot1.Enabled = false;
-            chkBot2.Enabled = false;
-            btnDifficulty.Enabled = false;
-            btnSpawn.Enabled = false;
-            btnBack.Enabled = false;
-            BtnReset.Enabled = false;
-
-
-            gameTimer.Enabled = true;
-            btnStart.Enabled = false;
+            SwitchControls();
             gameState = GameState.Running;
             this.Focus();
-            CreateFood();
+            GameEngine.GenerateFood(playerList, foodList, MaxWidth, MaxHeight);
+        }
+        private void SwitchControls()
+        {
+            txtName1.Enabled = !txtName1.Enabled;
+            chkBot1.Enabled = !chkBot1.Enabled;
+            chkBot2.Enabled = !chkBot2.Enabled;
+            btnDifficulty.Enabled = !btnDifficulty.Enabled;
+            btnSpawn.Enabled = !btnSpawn.Enabled;
+            btnBack.Enabled = !btnBack.Enabled;
+            BtnReset.Enabled = !BtnReset.Enabled;
+
+
+            gameTimer.Enabled = !gameTimer.Enabled;
+            btnStart.Enabled = !btnStart.Enabled;
         }
         private void BtnReset_Click(object sender, EventArgs e)
         {
@@ -284,34 +191,7 @@ namespace QuantumSerpent
                 _ => Color.Green
             };
         }
-        private void PlayerDied(Player player)
-        {
-            canvas.Invalidate();
-            player.State = PlayerState.Dead;
-            bool allDead = true;
-
-            foreach (var item in playerList)
-            {
-                if (item.State == PlayerState.Alive)
-                {
-                    allDead = false;
-                    break;
-                }
-            }
-
-            if (allDead)
-            {
-                gameState = GameState.GameOver;
-                gameTimer.Enabled = false;
-                lblMSG.Visible = true;
-                lblMSG.Text = "Game Over!";
-                BtnReset.Enabled = true;
-
-                // Show the high score menu
-                ShowHighScoreMenu(player);
-            }
-        }
-        private void BtnAddPlayer_Click(object sender, EventArgs e)
+        private void BtnAddPlayer_Click(object sender, EventArgs e)//Event handler for the add player button
         {
             //Factory -> Spawns Players
             try
@@ -329,16 +209,16 @@ namespace QuantumSerpent
 
             canvas.Invalidate();
         }
-        private void BtnBack_Click(object sender, EventArgs e)
+        private void BtnBack_Click(object sender, EventArgs e)//Event handler for the back button
         {
             mainMenu.Show();
             this.Close();
         }
-        private void SinglePlayer_FormClosed(object sender, FormClosedEventArgs e)
+        private void SinglePlayer_FormClosed(object sender, FormClosedEventArgs e)//No need to move this method, as it is an event handler for the form!
         {
             if (mainMenu.Visible == false) mainMenu.Close();
         }
-        public ((IEnumerable<Position>, IEnumerable<Food>), (int, int)) GetWorldInfo()
+        public ((IEnumerable<Position>, IEnumerable<Food>), (int, int)) GetWorldInfo()//No need to move this method, as the multiplayer mode will not have any AI players!
         {
             List<Position> avoid = [];
             List<Food> food = [];
@@ -355,23 +235,13 @@ namespace QuantumSerpent
                 food.Add(item);
             }
             return ((avoid, food), (MaxWidth, MaxHeight));
-        }
-        private void RedrawScoreboard()
+        } 
+        private void RedrawScoreboard()// Moved to DrawUtils.cs!
         {
             DrawUtils.UpdateScoreboard(scoreboardTBL, playerList);
             //Same as DrawGame, we will move this method to DrawUtils.cs
-        }
-        private static double CalculateInterval()
-        {
-            return GameSettings.Difficulty switch
-            {
-                Difficulty.Easy => 200,
-                Difficulty.Medium => 100,
-                Difficulty.Hard => 15,
-                _ => 200
-            } / (((4) / ((1 + (Math.Pow(Math.E, -0.01 * (playerList.Sum(player => player.Score) - (3 * playerList.Count))))))) - 1.2);
-        }
-        private void ShowHighScoreMenu(Player player)
+        } 
+        private void ShowHighScoreMenu(Player player) //No need to move this method, as the multiplayer unlike the arcade mode, will not have a highscore system!
         {
             if(player is AIPlayer)
             {
