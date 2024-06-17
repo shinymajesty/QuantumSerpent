@@ -37,8 +37,7 @@ namespace QuantumSerpent
         private void btnHost_Click(object sender, EventArgs e)
         {
             HostServerForm hostServerForm = new HostServerForm(this);
-            hostServerForm.Show();
-            this.Hide();
+            hostServerForm.ShowDialog();
         }
     }
 }

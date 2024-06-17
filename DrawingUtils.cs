@@ -11,6 +11,8 @@ public static class DrawUtils
         using var offScreenBitmap = new Bitmap(canvas.Width, canvas.Height);
         using var offScreenGraphics = Graphics.FromImage(offScreenBitmap);
 
+        DrawCheckerboard(offScreenGraphics, scale, canvas.Height / scale, canvas.Width / scale);
+
         // Draw players
         if (gameState != GameState.GameOver)
         {
@@ -53,6 +55,34 @@ public static class DrawUtils
 
         // Draw the off-screen bitmap to the screen
         graphics.DrawImage(offScreenBitmap, 0, 0);
+    }
+    private static void DrawCheckerboard(Graphics graphics, int squareSize, int rows, int columns)
+    {
+        // Calculate total size based on rows and columns
+        int totalWidth = squareSize * columns;
+        int totalHeight = squareSize * rows;
+
+        // Create brushes for each color
+        using (Brush brush1 = new SolidBrush(GameSettings.Color1))
+        using (Brush brush2 = new SolidBrush(GameSettings.Color2))
+        {
+            // Loop through each square and draw it
+            for (int row = 0; row < rows; row++)
+            {
+                for (int col = 0; col < columns; col++)
+                {
+                    // Determine which color to use based on row and column indices
+                    Brush brush = (row + col) % 2 == 0 ? brush1 : brush2;
+
+                    // Calculate the position of the square
+                    int x = col * squareSize;
+                    int y = row * squareSize;
+
+                    // Draw the square
+                    graphics.FillRectangle(brush, x, y, squareSize, squareSize);
+                }
+            }
+        }
     }
     public static void UpdateScoreboard(TableLayoutPanel scoreboardTBL, IEnumerable<Player> playerList)
     {

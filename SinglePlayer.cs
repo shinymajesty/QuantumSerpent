@@ -43,7 +43,6 @@ namespace QuantumSerpent
             canvas.Invalidate(); // Force redraw
             RedrawScoreboard();
         }
-
         private void GameOverFunction(Player player)
         {
             gameState = GameState.GameOver;
@@ -53,7 +52,6 @@ namespace QuantumSerpent
             SwitchControls();
 
         }
-
         private void BtnStart_Click(object sender, EventArgs e)
         {
             GameSettings.Bot1 = chkBot1.Checked;

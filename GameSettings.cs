@@ -14,6 +14,9 @@ namespace QuantumSerpent
         public static int Size { get; set; } = 20;
         public static bool Bot1 { get; set; } = false;
         public static bool Bot2 { get; set; } = false;
+        public static Color Color1 { get; set; } = Color.FromArgb(15,15,15);
+        public static Color Color2 { get; set; } = Color.FromArgb(45,45,75);
+
 
     }
 }
