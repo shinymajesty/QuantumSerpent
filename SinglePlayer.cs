@@ -232,57 +232,10 @@ namespace QuantumSerpent
         }
         private void Canvas_Paint(object sender, PaintEventArgs e)
         {
-            int scale = GameSettings.Size;
-            // Draw the whole game situation
-            using var offScreenBitmap = new Bitmap(canvas.Width, canvas.Height);
-            using var offScreenGraphics = Graphics.FromImage(offScreenBitmap);
-            // Draw the player
-            if (gameState != GameState.GameOver)
-            {
-                foreach (Player player in playerList)
-                {
-                    if (player.State == PlayerState.Alive)
-                    {
-                        foreach (Position item in player.Items)
-                        {
-                            Brush brush;
-                            if (player.Items.First() == item)
-                            {
-                                brush = player.HeadColor;
-                            }
-                            else
-                            {
-                                brush = player.BodyColor;
-                            }
-                            offScreenGraphics.FillRectangle(brush, item.X * scale, item.Y * scale, scale, scale);
-                        }
-
-                        var nameLabel = new Label()
-                        {
-                            Text = player.Name,
-                            AutoSize = true,
-                            Width = 0,
-                            Height = 0,
-                            ForeColor = Color.White,
-                            Font = new Font("Segoe UI", 12, FontStyle.Bold),
-                            BackColor = Color.Transparent,
-                            TextAlign = ContentAlignment.MiddleCenter
-                        };
-                        Size preferredSize = nameLabel.GetPreferredSize(Size.Empty);
-                        int newWidth = preferredSize.Width;
-                        nameLabel.Location = new Point((player.X * scale - newWidth / 2), (player.Y * scale - 20));
-                        canvas.Controls.Add(nameLabel);
-                    }
-                }
-            }
-            // Draw the food
-            foreach (Food food in foodList)
-            {
-                Brush brush = food is Pepper ? Brushes.Red : Brushes.Green;
-                offScreenGraphics.FillRectangle(brush, food.Position.X * scale, food.Position.Y * scale, scale, scale);
-            }
-            // Draw the off-screen bitmap to the screen
-            e.Graphics.DrawImage(offScreenBitmap, 0, 0);
+            DrawUtils.DrawGame(e.Graphics, GameSettings.Size, gameState, playerList, foodList, canvas);
+            //          Graphics graphics| int scale        | gameState| IEnumerable<Player>| IEnumerable<Food>| canvas //so many parameters, let's pray the game still runs ;D
+            //After excessive testing, the game still runs. PRAISE THE LORD!
+            //Since we will need a similar method for the multiplayer mode of the game, I decided to create a new class called DrawUtils.cs
         }
         private void FrmGame_KeyDown(object sender, KeyEventArgs e)
         {
@@ -405,36 +358,8 @@ namespace QuantumSerpent
         }
         private void RedrawScoreboard()
         {
-            scoreboardTBL.Controls.Clear();
-            scoreboardTBL.RowStyles.Clear();
-            scoreboardTBL.RowCount = 0;
-
-            scoreboardTBL.RowCount = playerList.Count;
-            for (int i = 0; i < playerList.Count; i++)
-            {
-                var p = playerList[i];
-                if (p == null) continue;
-                scoreboardTBL.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-                Label lblName = new()
-                {
-                    Text = p.Name,
-                    AutoSize = true,
-                    Font = new Font("Segoe UI", 12, FontStyle.Bold),
-                    ForeColor = ((SolidBrush)p.HeadColor).Color,
-                    TextAlign = ContentAlignment.MiddleCenter
-                };
-                Label lblScore = new()
-                {
-                    Text = p.Score.ToString(),
-                    AutoSize = true,
-                    Font = new Font("Segoe UI", 12, FontStyle.Bold),
-                    ForeColor = ((SolidBrush)p.HeadColor).Color,
-                    TextAlign = ContentAlignment.MiddleCenter
-                };
-                scoreboardTBL.Controls.Add(lblScore, 1, i);
-                scoreboardTBL.Controls.Add(lblName, 0, i);
-
-            }
+            DrawUtils.UpdateScoreboard(scoreboardTBL, playerList);
+            //Same as DrawGame, we will move this method to DrawUtils.cs
         }
         private static double CalculateInterval()
         {
