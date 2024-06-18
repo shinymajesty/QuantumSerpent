@@ -1,5 +1,6 @@
 using System.Numerics;
 using System.Windows.Forms;
+using System.Media;
 
 namespace QuantumSerpent
 {
@@ -16,6 +17,8 @@ namespace QuantumSerpent
             InitializeComponent();
             mainMenu = formCreator;
         }
+        private SoundPlayer soundplayer;
+        private string filepath = "music.wav";
         private void GameTimer_Tick(object sender, EventArgs e)
         {
             if(gameState != GameState.Running)
@@ -43,6 +46,7 @@ namespace QuantumSerpent
             canvas.Invalidate(); // Force redraw
             RedrawScoreboard();
         }
+        
         private void GameOverFunction(Player player)
         {
             gameState = GameState.GameOver;
@@ -94,6 +98,12 @@ namespace QuantumSerpent
             gameState = GameState.Running;
             this.Focus();
             GameEngine.GenerateFood(playerList, foodList, MaxWidth, MaxHeight);
+            InitializePlayer();
+        }
+        private void InitializePlayer()
+        {
+            soundplayer = new SoundPlayer(filepath);
+            soundplayer.PlayLooping();
         }
         private void SwitchControls()
         {
