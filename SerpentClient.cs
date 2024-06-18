@@ -16,7 +16,11 @@ namespace QuantumSerpent
 
         public void Connect()
         {
-            client = new TcpClient(IP, Port);
+            try
+            {
+                client = new TcpClient(IP, Port);
+            }
+            catch { }
         }
 
         public void SendData(string data)
@@ -28,10 +32,22 @@ namespace QuantumSerpent
 
         public string ReceiveData()
         {
+            try
+            {
             NetworkStream stream = client.GetStream();
             byte[] buffer = new byte[2048];
             int i = stream.Read(buffer, 0, buffer.Length);
             return Encoding.ASCII.GetString(buffer, 0, i);
+            }
+            catch (Exception e)
+            {
+                if(e is System.IO.IOException)
+                {
+                    MessageBox.Show("Server forced the connection to close. Disconnecting.");
+                    this.Disconnect();
+                }
+            }
+            return "";
         }
 
         public void Disconnect()

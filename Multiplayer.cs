@@ -41,6 +41,7 @@ namespace QuantumSerpent
 
            SerpentClientGame serpentClientGame = new(IP, Port);
            serpentClientGame.Show();
+            
         }
         private void btnHost_Click(object sender, EventArgs e)
         {

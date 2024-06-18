@@ -68,27 +68,28 @@
             tableLayoutPanel1.Controls.Add(tableLayoutPanel4, 0, 2);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Margin = new Padding(0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 3;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 80F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            tableLayoutPanel1.Size = new Size(1020, 604);
+            tableLayoutPanel1.Size = new Size(1031, 631);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // tableLayoutPanel2
             // 
             tableLayoutPanel2.ColumnCount = 2;
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 62.9722939F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 37.0277061F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.Controls.Add(canvas, 0, 0);
             tableLayoutPanel2.Controls.Add(panel1, 1, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
-            tableLayoutPanel2.Location = new Point(3, 63);
+            tableLayoutPanel2.Location = new Point(3, 66);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.Size = new Size(1014, 477);
+            tableLayoutPanel2.Size = new Size(1025, 498);
             tableLayoutPanel2.TabIndex = 0;
             // 
             // canvas
@@ -96,7 +97,7 @@
             canvas.Dock = DockStyle.Fill;
             canvas.Location = new Point(3, 3);
             canvas.Name = "canvas";
-            canvas.Size = new Size(632, 471);
+            canvas.Size = new Size(506, 492);
             canvas.TabIndex = 0;
             canvas.TabStop = false;
             canvas.Paint += canvas_Paint;
@@ -109,9 +110,9 @@
             panel1.Controls.Add(btnDC);
             panel1.Controls.Add(scoreboard);
             panel1.Dock = DockStyle.Top;
-            panel1.Location = new Point(641, 3);
+            panel1.Location = new Point(515, 3);
             panel1.Name = "panel1";
-            panel1.Size = new Size(370, 471);
+            panel1.Size = new Size(507, 456);
             panel1.TabIndex = 1;
             // 
             // lblScoreboard
@@ -121,7 +122,7 @@
             lblScoreboard.ForeColor = Color.Lime;
             lblScoreboard.Location = new Point(0, 0);
             lblScoreboard.Name = "lblScoreboard";
-            lblScoreboard.Size = new Size(370, 40);
+            lblScoreboard.Size = new Size(507, 40);
             lblScoreboard.TabIndex = 1;
             lblScoreboard.Text = "Scores:";
             lblScoreboard.TextAlign = ContentAlignment.MiddleLeft;
@@ -132,11 +133,12 @@
             panel2.Dock = DockStyle.Top;
             panel2.Location = new Point(0, 0);
             panel2.Name = "panel2";
-            panel2.Size = new Size(370, 0);
+            panel2.Size = new Size(507, 0);
             panel2.TabIndex = 4;
             // 
             // tableLayoutPanel3
             // 
+            tableLayoutPanel3.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel3.ColumnCount = 1;
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel3.Controls.Add(tableLayoutPanel5, 0, 0);
@@ -146,7 +148,7 @@
             tableLayoutPanel3.RowCount = 2;
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel3.Size = new Size(364, 115);
+            tableLayoutPanel3.Size = new Size(502, 115);
             tableLayoutPanel3.TabIndex = 3;
             // 
             // tableLayoutPanel5
@@ -162,17 +164,17 @@
             tableLayoutPanel5.Name = "tableLayoutPanel5";
             tableLayoutPanel5.RowCount = 1;
             tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel5.Size = new Size(358, 51);
+            tableLayoutPanel5.Size = new Size(496, 51);
             tableLayoutPanel5.TabIndex = 0;
             // 
             // label1
             // 
-            label1.Dock = DockStyle.Fill;
+            label1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             label1.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label1.ForeColor = Color.Lime;
             label1.Location = new Point(3, 0);
             label1.Name = "label1";
-            label1.Size = new Size(76, 51);
+            label1.Size = new Size(107, 51);
             label1.TabIndex = 2;
             label1.Text = "Name:";
             label1.TextAlign = ContentAlignment.MiddleLeft;
@@ -183,24 +185,24 @@
             txtName.Dock = DockStyle.Fill;
             txtName.Font = new Font("Segoe UI", 14F);
             txtName.ForeColor = Color.Lime;
-            txtName.Location = new Point(85, 3);
+            txtName.Location = new Point(116, 3);
             txtName.Name = "txtName";
-            txtName.Size = new Size(270, 45);
+            txtName.Size = new Size(377, 45);
             txtName.TabIndex = 3;
             txtName.Text = "";
             // 
             // tableLayoutPanel6
             // 
+            tableLayoutPanel6.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tableLayoutPanel6.ColumnCount = 2;
-            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 56.42458F));
-            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 43.57542F));
+            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50.69307F));
+            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 49.30693F));
             tableLayoutPanel6.Controls.Add(btnJoin, 1, 0);
-            tableLayoutPanel6.Dock = DockStyle.Fill;
             tableLayoutPanel6.Location = new Point(3, 60);
             tableLayoutPanel6.Name = "tableLayoutPanel6";
             tableLayoutPanel6.RowCount = 1;
             tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel6.Size = new Size(358, 52);
+            tableLayoutPanel6.Size = new Size(496, 52);
             tableLayoutPanel6.TabIndex = 1;
             // 
             // btnJoin
@@ -208,9 +210,9 @@
             btnJoin.Dock = DockStyle.Fill;
             btnJoin.FlatStyle = FlatStyle.Flat;
             btnJoin.ForeColor = Color.Lime;
-            btnJoin.Location = new Point(205, 3);
+            btnJoin.Location = new Point(254, 3);
             btnJoin.Name = "btnJoin";
-            btnJoin.Size = new Size(150, 46);
+            btnJoin.Size = new Size(239, 46);
             btnJoin.TabIndex = 0;
             btnJoin.Text = "Join!";
             btnJoin.UseVisualStyleBackColor = true;
@@ -222,15 +224,17 @@
             btnDC.Dock = DockStyle.Bottom;
             btnDC.FlatStyle = FlatStyle.Flat;
             btnDC.ForeColor = Color.Black;
-            btnDC.Location = new Point(0, 395);
+            btnDC.Location = new Point(0, 380);
             btnDC.Name = "btnDC";
-            btnDC.Size = new Size(370, 76);
+            btnDC.Size = new Size(507, 76);
             btnDC.TabIndex = 2;
             btnDC.Text = "Disconnect";
             btnDC.UseVisualStyleBackColor = false;
+            btnDC.Click += btnDC_Click;
             // 
             // scoreboard
             // 
+            scoreboard.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             scoreboard.ColumnCount = 2;
             scoreboard.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 75F));
             scoreboard.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
@@ -238,7 +242,7 @@
             scoreboard.Name = "scoreboard";
             scoreboard.RowCount = 1;
             scoreboard.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            scoreboard.Size = new Size(367, 93);
+            scoreboard.Size = new Size(504, 93);
             scoreboard.TabIndex = 0;
             // 
             // lblTitle
@@ -248,7 +252,7 @@
             lblTitle.ForeColor = Color.Lime;
             lblTitle.Location = new Point(3, 0);
             lblTitle.Name = "lblTitle";
-            lblTitle.Size = new Size(1014, 60);
+            lblTitle.Size = new Size(1025, 63);
             lblTitle.TabIndex = 1;
             lblTitle.Text = "Connected to Server:";
             lblTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -263,11 +267,11 @@
             tableLayoutPanel4.Controls.Add(lblClientIP, 1, 0);
             tableLayoutPanel4.Controls.Add(lblHostIP, 0, 0);
             tableLayoutPanel4.Dock = DockStyle.Fill;
-            tableLayoutPanel4.Location = new Point(3, 546);
+            tableLayoutPanel4.Location = new Point(3, 570);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.RowCount = 1;
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel4.Size = new Size(1014, 55);
+            tableLayoutPanel4.Size = new Size(1025, 58);
             tableLayoutPanel4.TabIndex = 2;
             // 
             // lblPort
@@ -275,9 +279,9 @@
             lblPort.Dock = DockStyle.Fill;
             lblPort.Font = new Font("Segoe UI", 14F);
             lblPort.ForeColor = Color.Lime;
-            lblPort.Location = new Point(679, 0);
+            lblPort.Location = new Point(685, 0);
             lblPort.Name = "lblPort";
-            lblPort.Size = new Size(332, 55);
+            lblPort.Size = new Size(337, 58);
             lblPort.TabIndex = 2;
             lblPort.Text = "Port:";
             lblPort.TextAlign = ContentAlignment.MiddleLeft;
@@ -287,9 +291,9 @@
             lblClientIP.Dock = DockStyle.Fill;
             lblClientIP.Font = new Font("Segoe UI", 14F);
             lblClientIP.ForeColor = Color.Lime;
-            lblClientIP.Location = new Point(341, 0);
+            lblClientIP.Location = new Point(344, 0);
             lblClientIP.Name = "lblClientIP";
-            lblClientIP.Size = new Size(332, 55);
+            lblClientIP.Size = new Size(335, 58);
             lblClientIP.TabIndex = 1;
             lblClientIP.Text = "Client IP:";
             lblClientIP.TextAlign = ContentAlignment.MiddleLeft;
@@ -301,7 +305,7 @@
             lblHostIP.ForeColor = Color.Lime;
             lblHostIP.Location = new Point(3, 0);
             lblHostIP.Name = "lblHostIP";
-            lblHostIP.Size = new Size(332, 55);
+            lblHostIP.Size = new Size(335, 58);
             lblHostIP.TabIndex = 0;
             lblHostIP.Text = "Host IP:";
             lblHostIP.TextAlign = ContentAlignment.MiddleLeft;
@@ -310,7 +314,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1020, 604);
+            ClientSize = new Size(1031, 631);
             Controls.Add(tableLayoutPanel1);
             KeyPreview = true;
             Name = "SerpentClientGame";

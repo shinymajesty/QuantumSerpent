@@ -1,54 +1,85 @@
 ﻿using System;
-using System.Reflection;
-using System.Text;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Runtime.CompilerServices.RuntimeHelpers;
 
 namespace QuantumSerpent
 {
     public partial class SerpentClientGame : Form
     {
-        private readonly SerpentClient client;
+        private SerpentClient client;
         private string playerName;
-        private List<Player> playerList = [];
-        private List<Food> foodList = [];
+        private List<Player> playerList = new List<Player>(); // Initialize playerList
+        private List<Food> foodList = new List<Food>(); // Initialize foodList
+        private readonly string IP;
+        private readonly int Port;
+        private (int MaxWidth, int MaxHeight) MaxSize;
+
         public SerpentClientGame(string serverIP, int serverPort)
         {
             InitializeComponent();
             client = new SerpentClient(serverPort, serverIP);
             client.Connect();
+            IP = serverIP;
+            Port = serverPort;
 
             // Start listening to server updates asynchronously
             StartReceivingUpdates();
         }
 
-
         private async void StartReceivingUpdates()
         {
-            await Task.Run(() =>
+            try
             {
-                while (true)
+                await Task.Run(() =>
                 {
-                    string gameState = client.ReceiveData();
-                    SerpentServer.ParseJson(gameState, playerList, foodList);
+                    while (true)
+                    {
+                        string gameState = client.ReceiveData();
+                        SerpentServer.ParseJson(gameState, playerList, foodList, ref MaxSize);
 
-                    // Update the UI on the UI thread
-                    canvas.Invoke((Action)(() => //Woho cuz we ain't learn this shit in school :///
-                    {
-                        canvas.Controls.Clear();
-                        canvas.Invalidate();
-                    }));
-                    if(playerList.Count == 0)
-                    {
-                        btnDC.Invoke((Action)(() =>
+                        // Update the UI on the UI thread
+                        try
                         {
-                            btnDC.Enabled = true;
-                        }));
-                    }
-                }
-            });
-        }
+                            canvas.Invoke((Action)(() =>
+                            {
+                                GameSettings.Size = canvas.Width / MaxSize.MaxWidth;
+                                canvas.Size = new System.Drawing.Size(MaxSize.MaxWidth * GameSettings.Size, MaxSize.MaxHeight * GameSettings.Size);
+                                canvas.Controls.Clear();
+                                canvas.Invalidate();
+                            }));
+                        }
+                        catch { }
+                        try
+                        {
+                            // Enable buttons and text box if playerList is empty
+                            if (playerList.Count == 0)
+                            {
+                                Invoke((Action)(() =>
+                                {
+                                    btnDC.Enabled = true;
+                                    btnJoin.Enabled = true;
+                                    txtName.Enabled = true;
+                                }));
 
+                                // Close the form
+                                Invoke((Action)(() =>
+                                {
+                                    Close();
+                                }));
+                            }
+                        }
+                        catch { }
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Server forced the connection to close. Disconnecting.");
+                client.Disconnect();
+                Close();
+            }
+        }
 
         private void SendDirection(string direction)
         {
@@ -93,6 +124,19 @@ namespace QuantumSerpent
             txtName.Enabled = false;
             btnJoin.Enabled = false;
             btnDC.Enabled = false;
+            this.MinimumSize = this.Size;
+            this.MaximumSize = this.Size;
+        }
+
+        private void btnDC_Click(object sender, EventArgs e)
+        {
+            client.Disconnect();
+            Close(); // Close the form
+        }
+
+        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

@@ -25,6 +25,7 @@ namespace QuantumSerpent
         public MultiplayerGame(Form formCreator, string playerName, int playerCount, int initLength, int interval)
         {
             InitializeComponent();
+            this.Size = new System.Drawing.Size(1000, 600);
             this.playerName = playerName;
             this.playerCount = playerCount;
             this.initLength = initLength;
@@ -106,10 +107,14 @@ namespace QuantumSerpent
         {
             SwitchControls();
             gameState = GameState.Running;
+            this.MinimumSize = this.Size;
+            this.MaximumSize = this.Size;
         }
 
         private void btnStopGame_Click(object sender, EventArgs e)
         {
+            server.StopServer();
+            server.StartServer(MaxWidth, MaxHeight);
             Player.Reset();
             playerList.Clear();
             hostPlayer = Player.Create(MaxWidth, MaxHeight, playerName);
@@ -148,11 +153,14 @@ namespace QuantumSerpent
             {
                 return;
             }
-            if (hostPlayer.CanMove)
+            if (hostPlayer != null)
             {
-                if (hostPlayer.HandleKey(e.KeyCode))
+                if (hostPlayer.CanMove)
                 {
-                    hostPlayer.CanMove = false;
+                    if (hostPlayer.HandleKey(e.KeyCode))
+                    {
+                        hostPlayer.CanMove = false;
+                    }
                 }
             }
         }

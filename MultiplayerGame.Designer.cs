@@ -91,15 +91,15 @@
             // tableLayoutPanel2
             // 
             tableLayoutPanel2.ColumnCount = 2;
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 58.20628F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 41.79372F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.Controls.Add(canvas, 0, 0);
             tableLayoutPanel2.Controls.Add(panel1, 1, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(3, 62);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel2.Size = new Size(1118, 470);
             tableLayoutPanel2.TabIndex = 1;
             // 
@@ -108,7 +108,7 @@
             canvas.Dock = DockStyle.Fill;
             canvas.Location = new Point(3, 3);
             canvas.Name = "canvas";
-            canvas.Size = new Size(644, 464);
+            canvas.Size = new Size(553, 464);
             canvas.TabIndex = 0;
             canvas.TabStop = false;
             canvas.Paint += Canvas_Paint;
@@ -120,9 +120,9 @@
             panel1.Controls.Add(tblScore);
             panel1.Controls.Add(lblScoreboard);
             panel1.Dock = DockStyle.Fill;
-            panel1.Location = new Point(653, 3);
+            panel1.Location = new Point(562, 3);
             panel1.Name = "panel1";
-            panel1.Size = new Size(462, 464);
+            panel1.Size = new Size(553, 464);
             panel1.TabIndex = 1;
             // 
             // panel2
@@ -131,7 +131,7 @@
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 199);
             panel2.Name = "panel2";
-            panel2.Size = new Size(462, 265);
+            panel2.Size = new Size(553, 265);
             panel2.TabIndex = 4;
             // 
             // tableLayoutPanel3
@@ -146,7 +146,7 @@
             tableLayoutPanel3.RowCount = 2;
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel3.Size = new Size(462, 265);
+            tableLayoutPanel3.Size = new Size(553, 265);
             tableLayoutPanel3.TabIndex = 4;
             // 
             // tableLayoutPanel5
@@ -162,16 +162,16 @@
             tableLayoutPanel5.RowCount = 1;
             tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel5.Size = new Size(456, 126);
+            tableLayoutPanel5.Size = new Size(547, 126);
             tableLayoutPanel5.TabIndex = 3;
             // 
             // btnStart
             // 
             btnStart.Dock = DockStyle.Fill;
             btnStart.FlatStyle = FlatStyle.Flat;
-            btnStart.Location = new Point(231, 3);
+            btnStart.Location = new Point(276, 3);
             btnStart.Name = "btnStart";
-            btnStart.Size = new Size(222, 120);
+            btnStart.Size = new Size(268, 120);
             btnStart.TabIndex = 1;
             btnStart.Text = "Start Game";
             btnStart.UseVisualStyleBackColor = true;
@@ -183,7 +183,7 @@
             btnStopGame.FlatStyle = FlatStyle.Flat;
             btnStopGame.Location = new Point(3, 3);
             btnStopGame.Name = "btnStopGame";
-            btnStopGame.Size = new Size(222, 120);
+            btnStopGame.Size = new Size(267, 120);
             btnStopGame.TabIndex = 0;
             btnStopGame.Text = "Reset";
             btnStopGame.UseVisualStyleBackColor = true;
@@ -197,7 +197,7 @@
             btnShutDown.ForeColor = Color.White;
             btnShutDown.Location = new Point(3, 135);
             btnShutDown.Name = "btnShutDown";
-            btnShutDown.Size = new Size(456, 127);
+            btnShutDown.Size = new Size(547, 127);
             btnShutDown.TabIndex = 1;
             btnShutDown.Text = "Shut Dwn Server";
             btnShutDown.UseVisualStyleBackColor = false;
@@ -209,7 +209,7 @@
             lblSpeedModifier.Font = new Font("Segoe UI", 14F);
             lblSpeedModifier.Location = new Point(0, 160);
             lblSpeedModifier.Name = "lblSpeedModifier";
-            lblSpeedModifier.Size = new Size(462, 39);
+            lblSpeedModifier.Size = new Size(553, 39);
             lblSpeedModifier.TabIndex = 2;
             lblSpeedModifier.Text = "Speed Modifier: 1.00x";
             lblSpeedModifier.TextAlign = ContentAlignment.MiddleLeft;
@@ -224,7 +224,7 @@
             tblScore.Name = "tblScore";
             tblScore.RowCount = 1;
             tblScore.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tblScore.Size = new Size(462, 121);
+            tblScore.Size = new Size(553, 121);
             tblScore.TabIndex = 1;
             // 
             // lblScoreboard
@@ -233,7 +233,7 @@
             lblScoreboard.Font = new Font("Segoe UI", 14F);
             lblScoreboard.Location = new Point(0, 0);
             lblScoreboard.Name = "lblScoreboard";
-            lblScoreboard.Size = new Size(462, 39);
+            lblScoreboard.Size = new Size(553, 39);
             lblScoreboard.TabIndex = 0;
             lblScoreboard.Text = "Scores:";
             lblScoreboard.TextAlign = ContentAlignment.MiddleLeft;

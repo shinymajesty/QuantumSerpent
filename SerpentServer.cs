@@ -57,6 +57,7 @@ namespace QuantumSerpent
                 {
                     TcpClient client = await server.AcceptTcpClientAsync();
                     clients.Add(client);
+                    BroadcastGameState(playerList, foodList);
                     //MessageBox.Show($"Client connected: {((IPEndPoint)client.Client.RemoteEndPoint).Address}");
                     HandleClient(client);
                 }
@@ -75,9 +76,7 @@ namespace QuantumSerpent
                 {
                     string data = Encoding.ASCII.GetString(buffer, 0, bytesRead);
                     //MessageBox.Show($"Received from client: {data}");
-                    
                     HandleData(data, client);
-
                     // Process data received from client (assuming it's player direction for now)
                     // Here, you would validate the direction and update game state accordingly
                 }
@@ -97,6 +96,7 @@ namespace QuantumSerpent
                 playerList.Add(player);
                 clientPlayers.Add(client, player);
                 Drawgame();
+                BroadcastGameState(playerList, foodList);
             }
             else if(data.StartsWith("#1;&/"))
             {
@@ -189,7 +189,7 @@ namespace QuantumSerpent
             }
             public void BroadcastGameState(List<Player> playerList, List<Food> foodList)
             {
-            string gameStateJson = GetJson(playerList, foodList);
+            string gameStateJson = GetJson(playerList, foodList, (MaxWidth, MaxHeight));
             // Assuming tcpClients is a list of TcpClient instances representing each player's connection
             foreach (var tcpClient in clients)
             {
@@ -207,20 +207,26 @@ namespace QuantumSerpent
 
         public void StopServer()
         {
+            foreach (var clientSocket in clients)
+            {
+                clientSocket.Close();
+            }
+            clients.Clear();
             server.Stop();
         }
 
-        private string GetJson(List<Player> playerList, List<Food> foodList)
+        private string GetJson(List<Player> playerList, List<Food> foodList, (int, int) maxSize)
         {
             // Combine playerList and foodList into a single anonymous object and serialize to JSON
-            var combinedObject = new { Players = playerList, Food = foodList };
+            var combinedObject = new { Players = playerList, Food = foodList, MaxSize = maxSize };
             return JsonConvert.SerializeObject(combinedObject);
         }
 
-        public static void ParseJson(string jsonString, List<Player> playerList, List<Food> foodList)
+        public static void ParseJson(string jsonString, List<Player> playerList, List<Food> foodList, ref (int,int) maxSize)
         {
             // Deserialize the JSON string into a strong type with matching structure
             var combinedObject = JsonConvert.DeserializeObject<CombinedObject>(jsonString);
+            if (combinedObject == null) return; 
 
             // Assign the deserialized lists to the passed-in lists
             playerList.Clear();
@@ -228,6 +234,8 @@ namespace QuantumSerpent
 
             foodList.Clear();
             foodList.AddRange(combinedObject!.Food!);
+
+            maxSize = combinedObject.MaxSize;
         }
 
         // Define a class to represent the combined JSON object structure
@@ -238,5 +246,6 @@ namespace QuantumSerpent
     {
         public List<Player>? Players { get; set; }
         public List<Food>? Food { get; set; }
+        public (int MaxWidth, int MaxHeight) MaxSize { get; set; }
     }
 }
