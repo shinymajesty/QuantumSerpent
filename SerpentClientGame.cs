@@ -7,7 +7,8 @@ namespace QuantumSerpent
     {
         private readonly SerpentClient client;
         private string playerName;
-
+        private List<Player> playerList = [];
+        private List<Food> foodList = [];
         public SerpentClientGame(string playerName, string serverIP, int serverPort)
         {
             InitializeComponent();
@@ -26,10 +27,11 @@ namespace QuantumSerpent
                 while (true)
                 {
                     string gameState = client.ReceiveData();
-
+                    SerpentServer.ParseJson(gameState, playerList, foodList);
+                    canvas.Invalidate();
                     // Process received game state (e.g., update player positions, redraw game)
                     // Example: UpdatePlayerPositions(gameState);
-                    Console.WriteLine($"Received game state: {gameState}");
+
                 }
             });
         }
@@ -68,6 +70,11 @@ namespace QuantumSerpent
         private void SerpentClientGame_FormClosing(object sender, FormClosingEventArgs e)
         {
             client.Disconnect();
+        }
+
+        private void canvas_Paint(object sender, PaintEventArgs e)
+        {
+            DrawUtils.DrawGame(e.Graphics, GameSettings.Size, GameState.Running, playerList, foodList, canvas);
         }
     }
 }

@@ -4,6 +4,10 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+
+
 
 namespace QuantumSerpent
 {
@@ -27,12 +31,12 @@ namespace QuantumSerpent
             this.serverName = serverName;
         }
 
-        public void StartServer()
+        public void StartServer(List<Player> playerList ,List<Food> foodList)
         {
             server = new TcpListener(IPAddress.Any, port);
             server.Start();
 
-            Console.WriteLine($"Server '{serverName}' started on port {port}");
+            MessageBox.Show($"Server '{serverName}' started on port {port} (IP: " + GetIPHelper.GetIP() + ")");
 
             Task.Run(async () =>
             {
@@ -40,8 +44,8 @@ namespace QuantumSerpent
                 {
                     TcpClient client = await server.AcceptTcpClientAsync();
                     clients.Add(client);
-                    Console.WriteLine($"Client connected: {((IPEndPoint)client.Client.RemoteEndPoint).Address}");
-
+                    MessageBox.Show($"Client connected: {((IPEndPoint)client.Client.RemoteEndPoint).Address}");
+                    BroadcastGameState(playerList, foodList);
                     HandleClient(client);
                 }
             });
@@ -62,9 +66,6 @@ namespace QuantumSerpent
 
                     // Process data received from client (assuming it's player direction for now)
                     // Here, you would validate the direction and update game state accordingly
-
-                    // Broadcast updated game state to all clients
-                    BroadcastGameState(data);
                 }
             }
             catch (Exception ex)
@@ -73,20 +74,53 @@ namespace QuantumSerpent
             }
         }
 
-        private void BroadcastGameState(string gameState)
+        public void BroadcastGameState(List<Player> playerList, List<Food> foodList)
         {
-            byte[] buffer = Encoding.ASCII.GetBytes(gameState);
-
-            foreach (TcpClient client in clients)
+            string gameStateJson = GetJson(playerList, foodList);
+            // Assuming tcpClients is a list of TcpClient instances representing each player's connection
+            foreach (var tcpClient in clients)
             {
-                NetworkStream stream = client.GetStream();
-                stream.Write(buffer, 0, buffer.Length);
+                // Get the network stream for sending data
+                NetworkStream stream = tcpClient.GetStream();
+
+                // Convert JSON string to bytes
+                byte[] data = Encoding.UTF8.GetBytes(gameStateJson);
+
+                // Send data over the network stream
+                stream.Write(data, 0, data.Length);
             }
+
         }
 
         public void StopServer()
         {
             server.Stop();
         }
+
+        private string GetJson(List<Player> playerList, List<Food> foodList)
+        {
+            // Serialize playerList and foodList to JSON strings
+            string playersJson = JsonConvert.SerializeObject(playerList);
+            string foodJson = JsonConvert.SerializeObject(foodList);
+
+            // Combine into a single JSON object or array if needed
+            return JsonConvert.SerializeObject(new { Players = playersJson, Food = foodJson });
+        }
+        public static void ParseJson(string jsonString, List<Player> playerList, List<Food> foodList)
+        {
+            // Deserialize the JSON string to an anonymous object
+            var HelpMe = JsonConvert.DeserializeObject<HelpMe>(jsonString);
+
+            // Deserialize the individual JSON strings back into their respective lists
+            playerList = JsonConvert.DeserializeObject<List<Player>>(HelpMe.Players);
+            foodList = JsonConvert.DeserializeObject<List<Food>>(HelpMe.Food);
+        }
+
+
+    }
+    internal class HelpMe
+    {
+        public string Players { get; set; }
+        public string Food { get; set; }
     }
 }

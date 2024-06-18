@@ -21,6 +21,7 @@ namespace QuantumSerpent
 
         private void Multiplayer_FormClosed(object sender, FormClosedEventArgs e)
         {
+            if (this.Visible == false) return;
             if (mainMenu.Visible == false) mainMenu.Close();
         }
 
@@ -32,9 +33,14 @@ namespace QuantumSerpent
 
         private void btnJoin_Click(object sender, EventArgs e)
         {
-           _ = new IPBox(this).ShowDialog();
+            var ipbox = new IPBox(this);
+            ipbox.ShowDialog();
+           
            string IP = IPBOXHelper.IP;
            int Port = IPBOXHelper.Port;
+
+           SerpentClientGame serpentClientGame = new("Player", IP, Port);
+           serpentClientGame.Show();
         }
         private void btnHost_Click(object sender, EventArgs e)
         {

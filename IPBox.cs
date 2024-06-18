@@ -22,9 +22,9 @@ namespace QuantumSerpent
 
         private void btnCnt_Click(object sender, EventArgs e)
         {
-            formCreator.Close();
             IPBOXHelper.IP = txtIP.Text;
             IPBOXHelper.Port = int.Parse(txtPort.Text);
+            btnBack_Click(sender, e);
         }
 
         private void btnBack_Click(object sender, EventArgs e)

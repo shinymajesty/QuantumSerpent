@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
+using System.Text;
 using System.Windows.Forms;
 
 namespace QuantumSerpent
 {
+    
     public partial class MultiplayerGame : Form
     {
         private readonly List<Food> foodList = new List<Food>();
@@ -30,8 +33,13 @@ namespace QuantumSerpent
             playerList.Add(Player.Create(MaxWidth, MaxHeight, playerName));
             GameEngine.GenerateFood(playerList, foodList, MaxWidth, MaxHeight);
 
+            UpdateLabels();
+            formCreator.Hide();
+            this.Show();
+
             server = new SerpentServer(9876, playerCount, initLength, interval, playerName);
-            server.StartServer();
+            server.StartServer(playerList, foodList);
+
         }
 
         private void GameTimer_Tick(object sender, EventArgs e)
@@ -58,6 +66,9 @@ namespace QuantumSerpent
             canvas.Controls.Clear();
             canvas.Invalidate();
             RedrawScoreboard();
+            // Assuming tcpClients is a list of TcpClient instances representing each player's connection
+            server.BroadcastGameState(playerList, foodList);
+
         }
 
         private void RedrawScoreboard()
@@ -68,7 +79,7 @@ namespace QuantumSerpent
 
         private void UpdateLabels()
         {
-            // Update any additional labels or UI elements as needed
+            lblIP.Text = "Host IP: " + GetIPHelper.GetIP();
         }
 
         private void GameOverFunction(Player player)
@@ -112,7 +123,11 @@ namespace QuantumSerpent
         private void MultiplayerGame_FormClosing(object sender, FormClosingEventArgs e)
         {
             server.StopServer();
-            formCreator.Show();
+            if (formCreator.Visible == false)
+            {
+                Application.Exit();
+                return;
+            }
         }
 
         private void Canvas_Paint(object sender, PaintEventArgs e)

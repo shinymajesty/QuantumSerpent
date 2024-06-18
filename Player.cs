@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
+using System.Drawing;
 using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Newtonsoft.Json;
 
 namespace QuantumSerpent
 {
     public class Player
     {
-
-        private readonly List<Position> items = [];
+        private readonly List<Position> items = new List<Position>();
         Directions direction;
+
+        // Original constructor
         protected Player(int x, int y, Directions initialDirection, int initialLength = 3)
         {
             if (initialLength < 1)
@@ -27,6 +30,24 @@ namespace QuantumSerpent
             }
             direction = initialDirection;
         }
+
+        // JSON deserialization constructor
+        [JsonConstructor]
+        public Player(string name, int x, int y, int initialLength, Directions initialDirection, PlayerState state, List<Position> items)
+        {
+            this.Name = name;
+            this.direction = initialDirection;
+            this.State = state;
+            this.items = items ?? new List<Position>();
+            if (this.items.Count == 0)
+            {
+                for (int i = 0; i < initialLength; i++)
+                {
+                    this.items.Add(new Position(x, y));
+                }
+            }
+        }
+
         virtual public bool HandleKey(Keys keycode)
         {
             Directions oldDir = PlayerDirection;
@@ -38,27 +59,21 @@ namespace QuantumSerpent
             {
                 PlayerDirection = Directions.Up;
             }
-            else if(keycode == DownKey)
+            else if (keycode == DownKey)
             {
                 PlayerDirection = Directions.Down;
             }
-            else if(keycode == LeftKey)
+            else if (keycode == LeftKey)
             {
                 PlayerDirection = Directions.Left;
             }
-            else if(keycode == RightKey)
+            else if (keycode == RightKey)
             {
                 PlayerDirection = Directions.Right;
             }
-            if(PlayerDirection != oldDir)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return PlayerDirection != oldDir;
         }
+
         virtual public void Move(Directions direction)
         {
             if (HasMoved)
@@ -85,6 +100,7 @@ namespace QuantumSerpent
                     break;
             }
         }
+
         public int Score => items.Count;
         public Directions PlayerDirection
         {
@@ -111,11 +127,10 @@ namespace QuantumSerpent
         public Keys RightKey { get; set; } = Keys.Right;
         public Brush BodyColor { get; set; } = Brushes.Black;
         public Brush HeadColor { get; set; } = Brushes.Green;
-
-
         public IEnumerable<Position> Items => items;
         public PlayerState State { get; set; } = PlayerState.Alive;
         private static int instanceCount = 0;
+
         public static Player Create(int maxWidth, int maxHeight, string name)
         {
             instanceCount++;
@@ -151,6 +166,7 @@ namespace QuantumSerpent
                     throw new InvalidOperationException("Only 2 players are allowed");
             }
         }
+
         public static Player Create(string name, int x, int y, int initLength, Directions initDir)
         {
             instanceCount++;
@@ -159,17 +175,19 @@ namespace QuantumSerpent
                 Name = name == "" ? "Player " + instanceCount : name,
             };
         }
+
         public void Eat(Food food)
         {
-            for(int i = 0; i < food.Energy; i++)
-            items.Add(new Position(-1,-1));
+            for (int i = 0; i < food.Energy; i++)
+                items.Add(new Position(-1, -1));
         }
+
         public static void Reset()
         {
             instanceCount = 0;
         }
 
-        public string SerializeToJson() //Encode the data, so it can be sent over the network
+        public string SerializeToJson() // Encode the data so it can be sent over the network
         {
             var data = new
             {
@@ -190,17 +208,15 @@ namespace QuantumSerpent
                 PlayerState = p.State.ToString()
             }));
         }
+
         public string SerializeDirectionToJson()
         {
             return JsonConvert.SerializeObject(new { Direction = this.PlayerDirection.ToString() });
         }
-        public static string DeserializeFromJson(string json)
+
+        public static Player DeserializeFromJson(string json)
         {
-            var data = JsonConvert.DeserializeObject<Player>(json);
-            var name = data!.Name;
-            return name;
+            return JsonConvert.DeserializeObject<Player>(json);
         }
-
     }
-
 }

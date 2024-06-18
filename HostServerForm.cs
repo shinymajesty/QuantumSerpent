@@ -47,6 +47,7 @@ namespace QuantumSerpent
             this.InitLength = (int)Math.Round(nUD_initLength.Value);
             this.Interval = (int)Math.Round(nUP_Interval.Value);
 
+
             var mg = new MultiplayerGame(FormCreator, ServerName, PlayerCount, InitLength, Interval);
             mg.Show();
             mg.Focus();

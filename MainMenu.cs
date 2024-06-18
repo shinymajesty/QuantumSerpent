@@ -63,7 +63,7 @@ namespace QuantumSerpent
         {
             if (this.Visible == false)
             {
-                //Application.Exit();
+                Application.Exit();
                 return;
             }
             if (singlePlayer != null)

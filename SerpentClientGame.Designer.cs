@@ -30,7 +30,7 @@
         {
             tableLayoutPanel1 = new TableLayoutPanel();
             tableLayoutPanel2 = new TableLayoutPanel();
-            pictureBox1 = new PictureBox();
+            canvas = new PictureBox();
             panel1 = new Panel();
             btnDC = new Button();
             lblScoreboard = new Label();
@@ -42,7 +42,7 @@
             lblHostIP = new Label();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)canvas).BeginInit();
             panel1.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
             SuspendLayout();
@@ -71,7 +71,7 @@
             tableLayoutPanel2.ColumnCount = 2;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 62.9722939F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 37.0277061F));
-            tableLayoutPanel2.Controls.Add(pictureBox1, 0, 0);
+            tableLayoutPanel2.Controls.Add(canvas, 0, 0);
             tableLayoutPanel2.Controls.Add(panel1, 1, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(3, 63);
@@ -81,14 +81,15 @@
             tableLayoutPanel2.Size = new Size(1014, 477);
             tableLayoutPanel2.TabIndex = 0;
             // 
-            // pictureBox1
+            // canvas
             // 
-            pictureBox1.Dock = DockStyle.Fill;
-            pictureBox1.Location = new Point(3, 3);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(632, 471);
-            pictureBox1.TabIndex = 0;
-            pictureBox1.TabStop = false;
+            canvas.Dock = DockStyle.Fill;
+            canvas.Location = new Point(3, 3);
+            canvas.Name = "canvas";
+            canvas.Size = new Size(632, 471);
+            canvas.TabIndex = 0;
+            canvas.TabStop = false;
+            canvas.Paint += canvas_Paint;
             // 
             // panel1
             // 
@@ -213,7 +214,7 @@
             Text = "SerpentClientGame";
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)canvas).EndInit();
             panel1.ResumeLayout(false);
             tableLayoutPanel4.ResumeLayout(false);
             ResumeLayout(false);
@@ -223,7 +224,7 @@
 
         private TableLayoutPanel tableLayoutPanel1;
         private TableLayoutPanel tableLayoutPanel2;
-        private PictureBox pictureBox1;
+        private PictureBox canvas;
         private Label lblTitle;
         private Panel panel1;
         private Label lblScoreboard;

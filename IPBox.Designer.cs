@@ -132,7 +132,7 @@
             txtIP.Name = "txtIP";
             txtIP.Size = new Size(231, 45);
             txtIP.TabIndex = 1;
-            txtIP.Text = "";
+            txtIP.Text = "127.0.0.1";
             // 
             // tableLayoutPanel4
             // 
@@ -160,7 +160,7 @@
             txtPort.Name = "txtPort";
             txtPort.Size = new Size(231, 45);
             txtPort.TabIndex = 2;
-            txtPort.Text = "";
+            txtPort.Text = "9876";
             // 
             // lblPort
             // 
