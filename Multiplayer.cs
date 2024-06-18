@@ -32,7 +32,7 @@ namespace QuantumSerpent
 
         private void btnJoin_Click(object sender, EventArgs e)
         {
-
+            _ = new IPBox(this).ShowDialog();
         }
         private void btnHost_Click(object sender, EventArgs e)
         {
