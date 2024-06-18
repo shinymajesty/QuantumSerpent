@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -8,46 +7,81 @@ using System.Threading.Tasks;
 
 namespace QuantumSerpent
 {
-    public class SerpentServer(int port, int playerCount, int initLength, int interval, string serverName)
+    public class SerpentServer
     {
-        public int Port { get; private set; } = port;
-        public int PlayerCount { get; private set; } = playerCount;
-        public int InitLength { get; private set; } = initLength;
-        public int Interval { get; private set; } = interval;
-        public string ServerName { get; private set; } = serverName;
+        private readonly int port;
+        private readonly int playerCount;
+        private readonly int initLength;
+        private readonly int interval;
+        private readonly string serverName;
+
         private TcpListener server;
+        private List<TcpClient> clients = new List<TcpClient>();
+
+        public SerpentServer(int port, int playerCount, int initLength, int interval, string serverName)
+        {
+            this.port = port;
+            this.playerCount = playerCount;
+            this.initLength = initLength;
+            this.interval = interval;
+            this.serverName = serverName;
+        }
 
         public void StartServer()
         {
-            server = new(IPAddress.Any, Port);
+            server = new TcpListener(IPAddress.Any, port);
             server.Start();
 
-            MessageBox.Show("Server started on port " + Port.ToString());
+            Console.WriteLine($"Server '{serverName}' started on port {port}");
 
-            byte[] buffer = new byte[2048];
-            string data = "";
-
-            while (true)
+            Task.Run(async () =>
             {
-                TcpClient client = server.AcceptTcpClient();
-                NetworkStream stream = client.GetStream();
-
-                int i;
-
-                while((i = stream.Read(buffer, 0, buffer.Length)) != 0)
+                while (true)
                 {
-                    data = Encoding.ASCII.GetString(buffer, 0, i);
-                    MessageBox.Show(data);
+                    TcpClient client = await server.AcceptTcpClientAsync();
+                    clients.Add(client);
+                    Console.WriteLine($"Client connected: {((IPEndPoint)client.Client.RemoteEndPoint).Address}");
 
-                    byte[] msg = Encoding.ASCII.GetBytes(data);
-
-                    stream.Write(msg, 0, msg.Length);
-                    MessageBox.Show("Sent: " + data);
+                    HandleClient(client);
                 }
+            });
+        }
 
-                client.Close();
+        private async void HandleClient(TcpClient client)
+        {
+            try
+            {
+                NetworkStream stream = client.GetStream();
+                byte[] buffer = new byte[2048];
+                int bytesRead;
+
+                while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                {
+                    string data = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                    Console.WriteLine($"Received from client: {data}");
+
+                    // Process data received from client (assuming it's player direction for now)
+                    // Here, you would validate the direction and update game state accordingly
+
+                    // Broadcast updated game state to all clients
+                    BroadcastGameState(data);
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception handling client: {ex.Message}");
+            }
+        }
 
+        private void BroadcastGameState(string gameState)
+        {
+            byte[] buffer = Encoding.ASCII.GetBytes(gameState);
+
+            foreach (TcpClient client in clients)
+            {
+                NetworkStream stream = client.GetStream();
+                stream.Write(buffer, 0, buffer.Length);
+            }
         }
 
         public void StopServer()
