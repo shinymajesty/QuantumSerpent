@@ -16,6 +16,7 @@ namespace QuantumSerpent
         private readonly int playerCount;
         private readonly int initLength;
         private readonly int interval;
+        private Player hostPlayer;
         private GameState gameState = GameState.Paused;
         Form formCreator;
         private int MaxWidth => canvas.Width/GameSettings.Size;
@@ -30,16 +31,17 @@ namespace QuantumSerpent
             this.interval = interval;
             this.formCreator = formCreator;
 
-            playerList.Add(Player.Create(MaxWidth, MaxHeight, playerName));
+            hostPlayer = Player.Create(MaxWidth, MaxHeight, playerName);
+            playerList.Add(hostPlayer);
             GameEngine.GenerateFood(playerList, foodList, MaxWidth, MaxHeight);
 
             UpdateLabels();
             formCreator.Hide();
             this.Show();
 
-            server = new SerpentServer(9876, playerCount, initLength, interval, playerName);
-            server.StartServer(playerList, foodList);
-
+            server = new SerpentServer(9876, playerCount, initLength, interval, playerName, playerList, foodList);
+            server.StartServer(MaxWidth, MaxHeight);
+            server.Drawgame = new UpdateGameDrawing(() => canvas.Invalidate());
         }
 
         private void GameTimer_Tick(object sender, EventArgs e)
@@ -61,6 +63,9 @@ namespace QuantumSerpent
             }
 
             GameEngine.CheckCollision(playerList, foodList, MaxWidth, MaxHeight, GameOverFunction);
+            if (!playerList.Contains(hostPlayer))
+                hostPlayer = null;
+
 
             gameTimer.Interval = (int)GameEngine.CalculateInterval(playerList);
             canvas.Controls.Clear();
@@ -107,7 +112,8 @@ namespace QuantumSerpent
         {
             Player.Reset();
             playerList.Clear();
-            playerList.Add(Player.Create(MaxWidth, MaxHeight, playerName));
+            hostPlayer = Player.Create(MaxWidth, MaxHeight, playerName);
+            playerList.Add(hostPlayer);
             foodList.Clear();
             canvas.Controls.Clear();
             canvas.Invalidate();
@@ -142,15 +148,11 @@ namespace QuantumSerpent
             {
                 return;
             }
-
-            foreach (var player in playerList)
+            if (hostPlayer.CanMove)
             {
-                if (player.CanMove)
+                if (hostPlayer.HandleKey(e.KeyCode))
                 {
-                    if (player.HandleKey(e.KeyCode))
-                    {
-                        player.CanMove = false;
-                    }
+                    hostPlayer.CanMove = false;
                 }
             }
         }

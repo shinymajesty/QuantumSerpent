@@ -290,6 +290,7 @@
             // 
             // gameTimer
             // 
+            gameTimer.Interval = 1000;
             gameTimer.Tick += GameTimer_Tick;
             // 
             // MultiplayerGame

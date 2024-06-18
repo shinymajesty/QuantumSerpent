@@ -12,6 +12,7 @@ namespace QuantumSerpent
         public int Port { get; private set; } = port;
         public string IP { get; private set; } = ip;
         private TcpClient client;
+        public Player ClientPlayer { get; set; }
 
         public void Connect()
         {
