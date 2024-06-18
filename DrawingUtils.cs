@@ -1,6 +1,7 @@
 ﻿using QuantumSerpent;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms; 
 
 public static class DrawUtils
@@ -12,6 +13,8 @@ public static class DrawUtils
         using var offScreenGraphics = Graphics.FromImage(offScreenBitmap);
 
         DrawCheckerboard(offScreenGraphics, scale, canvas.Height / scale, canvas.Width / scale);
+
+        
 
         // Draw players
         if (gameState != GameState.GameOver)
@@ -34,7 +37,7 @@ public static class DrawUtils
                         Width = 0,
                         Height = 0,
                         ForeColor = Color.White,
-                        Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                        Font = new Font("Segoe UI", 12, FontStyle.Bold), //Why I love this font so much ~ ~ ~
                         BackColor = Color.Transparent,
                         TextAlign = ContentAlignment.MiddleCenter
                     };
@@ -84,12 +87,12 @@ public static class DrawUtils
             }
         }
     }
-    public static void UpdateScoreboard(TableLayoutPanel scoreboardTBL, IEnumerable<Player> playerList)
+    public static void UpdateScoreboard(TableLayoutPanel scoreboard, IEnumerable<Player> playerList)
     {
-        scoreboardTBL.Controls.Clear();
-        scoreboardTBL.RowStyles.Clear();
+        scoreboard.Controls.Clear();
+        scoreboard.RowStyles.Clear();
 
-        scoreboardTBL.RowCount = playerList.Count();
+        scoreboard.RowCount = playerList.Count();
 
         for (int i = 0; i < playerList.Count(); i++)
         {
@@ -97,7 +100,7 @@ public static class DrawUtils
             if (p == null) continue;
 
             // Add row style
-            scoreboardTBL.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            scoreboard.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
             // Create name label
             Label lblName = new()
@@ -118,8 +121,9 @@ public static class DrawUtils
             };
 
             // Add labels to table
-            scoreboardTBL.Controls.Add(lblName, 0, i);
-            scoreboardTBL.Controls.Add(lblScore, 1, i);
+            scoreboard.Controls.Add(lblName, 0, i);
+            scoreboard.Controls.Add(lblScore, 1, i);
         }
+        
     }
 }

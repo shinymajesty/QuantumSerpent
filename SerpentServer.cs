@@ -31,10 +31,12 @@ namespace QuantumSerpent
             this.serverName = serverName;
         }
 
-        public void StartServer(List<Player> playerList ,List<Food> foodList)
+        public void StartServer(List<Player> playerList, List<Food> foodList)
         {
             server = new TcpListener(IPAddress.Any, port);
             server.Start();
+
+            BroadcastGameState(playerList, foodList);
 
             MessageBox.Show($"Server '{serverName}' started on port {port} (IP: " + GetIPHelper.GetIP() + ")");
 
@@ -45,7 +47,6 @@ namespace QuantumSerpent
                     TcpClient client = await server.AcceptTcpClientAsync();
                     clients.Add(client);
                     MessageBox.Show($"Client connected: {((IPEndPoint)client.Client.RemoteEndPoint).Address}");
-                    BroadcastGameState(playerList, foodList);
                     HandleClient(client);
                 }
             });
@@ -99,28 +100,31 @@ namespace QuantumSerpent
 
         private string GetJson(List<Player> playerList, List<Food> foodList)
         {
-            // Serialize playerList and foodList to JSON strings
-            string playersJson = JsonConvert.SerializeObject(playerList);
-            string foodJson = JsonConvert.SerializeObject(foodList);
-
-            // Combine into a single JSON object or array if needed
-            return JsonConvert.SerializeObject(new { Players = playersJson, Food = foodJson });
+            // Combine playerList and foodList into a single anonymous object and serialize to JSON
+            var combinedObject = new { Players = playerList, Food = foodList };
+            return JsonConvert.SerializeObject(combinedObject);
         }
+
         public static void ParseJson(string jsonString, List<Player> playerList, List<Food> foodList)
         {
-            // Deserialize the JSON string to an anonymous object
-            var HelpMe = JsonConvert.DeserializeObject<HelpMe>(jsonString);
+            // Deserialize the JSON string into a strong type with matching structure
+            var combinedObject = JsonConvert.DeserializeObject<CombinedObject>(jsonString);
 
-            // Deserialize the individual JSON strings back into their respective lists
-            playerList = JsonConvert.DeserializeObject<List<Player>>(HelpMe.Players);
-            foodList = JsonConvert.DeserializeObject<List<Food>>(HelpMe.Food);
+            // Assign the deserialized lists to the passed-in lists
+            playerList.Clear();
+            playerList.AddRange(combinedObject!.Players!);
+
+            foodList.Clear();
+            foodList.AddRange(combinedObject!.Food!);
         }
+
+        // Define a class to represent the combined JSON object structure
 
 
     }
-    internal class HelpMe
+    internal class CombinedObject
     {
-        public string Players { get; set; }
-        public string Food { get; set; }
+        public List<Player>? Players { get; set; }
+        public List<Food>? Food { get; set; }
     }
 }

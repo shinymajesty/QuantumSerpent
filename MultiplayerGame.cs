@@ -112,6 +112,7 @@ namespace QuantumSerpent
             canvas.Controls.Clear();
             canvas.Invalidate();
             gameState = GameState.Paused;
+            GameEngine.GenerateFood(playerList, foodList, MaxWidth, MaxHeight);
         }
 
         private void btnShutDown_Click(object sender, EventArgs e)

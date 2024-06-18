@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 
 namespace QuantumSerpent
 {
+    [Serializable]
     public class Player
     {
         private readonly List<Position> items = new List<Position>();
@@ -31,7 +32,7 @@ namespace QuantumSerpent
             direction = initialDirection;
         }
 
-        // JSON deserialization constructor
+        // JSON deserialization constructor LEAVE HIM HERE IT SAY 0 REFERENCES BUT LEAVE HIM HERE YOU KNOW HOW MUCH EFFORT IT WAS OK? DO NOT DELETE
         [JsonConstructor]
         public Player(string name, int x, int y, int initialLength, Directions initialDirection, PlayerState state, List<Position> items)
         {
@@ -101,7 +102,9 @@ namespace QuantumSerpent
             }
         }
 
+        [JsonIgnore]
         public int Score => items.Count;
+        [JsonProperty("direction")]
         public Directions PlayerDirection
         {
             get => direction;
@@ -116,18 +119,30 @@ namespace QuantumSerpent
                 }
             }
         }
+        [JsonIgnore]
         public int X => items[0].X;
+        [JsonIgnore]
         public int Y => items[0].Y;
         public string Name { get; set; } = "";
+        [JsonIgnore]
         public bool HasMoved { get; set; } = false;
+        [JsonIgnore]
         public bool CanMove { get; set; } = true;
+        [JsonIgnore]
         public Keys UpKey { get; set; } = Keys.Up;
+        [JsonIgnore]
         public Keys DownKey { get; set; } = Keys.Down;
+        [JsonIgnore]
         public Keys LeftKey { get; set; } = Keys.Left;
+        [JsonIgnore]
         public Keys RightKey { get; set; } = Keys.Right;
+        [JsonIgnore]
         public Brush BodyColor { get; set; } = Brushes.Black;
+        [JsonIgnore]
         public Brush HeadColor { get; set; } = Brushes.Green;
+        [JsonProperty("items")]
         public IEnumerable<Position> Items => items;
+        [JsonProperty("state")]
         public PlayerState State { get; set; } = PlayerState.Alive;
         private static int instanceCount = 0;
 

@@ -34,7 +34,7 @@
             panel1 = new Panel();
             btnDC = new Button();
             lblScoreboard = new Label();
-            tableLayoutPanel3 = new TableLayoutPanel();
+            scoreboard = new TableLayoutPanel();
             lblTitle = new Label();
             tableLayoutPanel4 = new TableLayoutPanel();
             lblPort = new Label();
@@ -95,7 +95,7 @@
             // 
             panel1.Controls.Add(btnDC);
             panel1.Controls.Add(lblScoreboard);
-            panel1.Controls.Add(tableLayoutPanel3);
+            panel1.Controls.Add(scoreboard);
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(641, 3);
             panel1.Name = "panel1";
@@ -126,18 +126,18 @@
             lblScoreboard.TabIndex = 1;
             lblScoreboard.Text = "Scores:";
             // 
-            // tableLayoutPanel3
+            // scoreboard
             // 
-            tableLayoutPanel3.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            tableLayoutPanel3.ColumnCount = 2;
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 75F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            tableLayoutPanel3.Location = new Point(3, 43);
-            tableLayoutPanel3.Name = "tableLayoutPanel3";
-            tableLayoutPanel3.RowCount = 1;
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel3.Size = new Size(367, 100);
-            tableLayoutPanel3.TabIndex = 0;
+            scoreboard.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            scoreboard.ColumnCount = 2;
+            scoreboard.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 75F));
+            scoreboard.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            scoreboard.Location = new Point(3, 43);
+            scoreboard.Name = "scoreboard";
+            scoreboard.RowCount = 1;
+            scoreboard.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            scoreboard.Size = new Size(367, 100);
+            scoreboard.TabIndex = 0;
             // 
             // lblTitle
             // 
@@ -228,7 +228,7 @@
         private Label lblTitle;
         private Panel panel1;
         private Label lblScoreboard;
-        private TableLayoutPanel tableLayoutPanel3;
+        private TableLayoutPanel scoreboard;
         private TableLayoutPanel tableLayoutPanel4;
         private Label lblPort;
         private Label lblClientIP;

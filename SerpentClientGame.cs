@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace QuantumSerpent
@@ -28,13 +29,17 @@ namespace QuantumSerpent
                 {
                     string gameState = client.ReceiveData();
                     SerpentServer.ParseJson(gameState, playerList, foodList);
-                    canvas.Invalidate();
-                    // Process received game state (e.g., update player positions, redraw game)
-                    // Example: UpdatePlayerPositions(gameState);
 
+                    // Update the UI on the UI thread
+                    canvas.Invoke((Action)(() =>
+                    {
+                        canvas.Controls.Clear();
+                        canvas.Invalidate();
+                    }));
                 }
             });
         }
+
 
         private void SendDirection(string direction)
         {

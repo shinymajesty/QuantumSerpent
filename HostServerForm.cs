@@ -42,7 +42,7 @@ namespace QuantumSerpent
 
         private void btnLaunch_Click(object sender, EventArgs e)
         {
-            this.ServerName = rTB_Name.Text;
+            this.ServerName = rTB_Name.Text == "" ? "Server 1" : rTB_Name.Text;
             this.PlayerCount = trackBar_PlayerCount.Value;
             this.InitLength = (int)Math.Round(nUD_initLength.Value);
             this.Interval = (int)Math.Round(nUP_Interval.Value);

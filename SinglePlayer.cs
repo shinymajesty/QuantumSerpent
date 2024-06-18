@@ -140,7 +140,7 @@ namespace QuantumSerpent
             DrawUtils.DrawGame(e.Graphics, GameSettings.Size, gameState, playerList, foodList, canvas);
             //          Graphics graphics| int scale        | gameState| IEnumerable<Player>| IEnumerable<Food>| canvas //so many parameters, let's pray the game still runs ;D
             //After excessive testing, the game still runs. PRAISE THE LORD!
-            //Since we will need a similar method for the multiplayer mode of the game, I decided to create a new class called DrawUtils.cs
+            //Since we will need a similar method for the multiplayer mode of the game, I decided to create a new class called DrawUtils.cs into which I'll be moving all methods regarding drawing the game.
         }
         private void FrmGame_KeyDown(object sender, KeyEventArgs e)
         {
