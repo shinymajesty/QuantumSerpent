@@ -5,6 +5,7 @@ using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace QuantumSerpent
 {
@@ -26,10 +27,6 @@ namespace QuantumSerpent
             }
             direction = initialDirection;
         }
-
-        
-
-
         virtual public bool HandleKey(Keys keycode)
         {
             Directions oldDir = PlayerDirection;
@@ -89,8 +86,6 @@ namespace QuantumSerpent
             }
         }
         public int Score => items.Count;
-
-        
         public Directions PlayerDirection
         {
             get => direction;
@@ -156,6 +151,14 @@ namespace QuantumSerpent
                     throw new InvalidOperationException("Only 2 players are allowed");
             }
         }
+        public static Player Create(string name, int x, int y, int initLength, Directions initDir)
+        {
+            instanceCount++;
+            return new Player(x, y, initDir, initLength)
+            {
+                Name = name == "" ? "Player " + instanceCount : name,
+            };
+        }
         public void Eat(Food food)
         {
             for(int i = 0; i < food.Energy; i++)
@@ -166,5 +169,38 @@ namespace QuantumSerpent
             instanceCount = 0;
         }
 
+        public string SerializeToJson() //Encode the data, so it can be sent over the network
+        {
+            var data = new
+            {
+                this.Name,
+                Position = new { this.X, this.Y },
+                PlayerState = this.State.ToString()
+            };
+
+            return JsonConvert.SerializeObject(data);
+        }
+
+        public static string SerializeListToJson(List<Player> players)
+        {
+            return JsonConvert.SerializeObject(players.Select(p => new
+            {
+                Name = p.Name,
+                Position = new { X = p.X, Y = p.Y },
+                PlayerState = p.State.ToString()
+            }));
+        }
+        public string SerializeDirectionToJson()
+        {
+            return JsonConvert.SerializeObject(new { Direction = this.PlayerDirection.ToString() });
+        }
+        public static string DeserializeFromJson(string json)
+        {
+            var data = JsonConvert.DeserializeObject<Player>(json);
+            var name = data!.Name;
+            return name;
+        }
+
     }
+
 }
